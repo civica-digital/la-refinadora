@@ -6,17 +6,14 @@ import sys
 from tools import *
 from filtercsv import *
 
-
 FILE = sys.argv[1]
 RESOURCES_FILE = sys.argv[2]
-RESOURCES_FILE="resources.json"
 RESOURCES_DIR="resources"
 COMPILER_FILE = "compilers.json"
 
 CURRENT_DIRECTORY = getcwd()
 RESOURCES_FULLPATH = CURRENT_DIRECTORY + "/" + RESOURCES_DIR
 TEMP_FULLPATH = CURRENT_DIRECTORY + "/" + TMP_DIR
-
 
 def response_status(response_dict):
     status = "Pass"
@@ -97,6 +94,15 @@ def call_resource(resource,filename):
     resource_return = get_resource_results(resource,filtered_csv,id_api)
     return resource_return
 
+def run_validators(resource_list):
+    status = "Pass"
+    response_dict = {}
+    for resource in resource_list:
+        response_dict[resource]= call_resource(resource,FILE)
+        if response_status(response_dict) != "Pass": status = "Fail"
+    return_dict = {"status":status,"detail":response_dict}
+    return return_dict
+
 def main():
     compiler_dictionary = load_json(COMPILER_FILE)
 
@@ -106,13 +112,8 @@ def main():
         print(base_response_dict)
         sys.exit() 
     resource_list = load_resources(RESOURCES_FILE)
-    response_dict = {}
-    status = "Pass"
-    for resource in resource_list:
-        response_dict[resource]= call_resource(resource,FILE)
-        if response_dict[resource]['status'] != "Pass": status = "Fail"
-    return_dict = {"status":status,"detail":response_dict}
-    print(return_dict)
+    response_dict = run_validators(resource_list)
+    print(response_dict)
 
 if __name__ == "__main__":
     main()

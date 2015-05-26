@@ -1,5 +1,6 @@
 import string
 import random
+import time
 
 TMP_DIR="tmp"
 
@@ -18,6 +19,7 @@ def detect_lines(filename):
 def read_top_lines(filename, N):
     with open(filename,'rb') as fp:
         head = fp.readlines(N)
+        print(head)
     return head
 
 def name_id_generator(size=24, chars=string.ascii_uppercase + string.digits):
