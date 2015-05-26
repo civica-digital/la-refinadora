@@ -24,7 +24,7 @@ def response_status(response_dict):
 def verify_morethan11ine(filename):
     count = 0
     valor = 0
-    with open(filename) as fp:
+    with open(filename,"rb") as fp:
         for line in fp:
             count = count + 1
             if count > 1: valor = 1
@@ -105,7 +105,6 @@ def run_validators(resource_list):
 
 def main():
     compiler_dictionary = load_json(COMPILER_FILE)
-
     base_response_dict = base_validation(FILE)
     base_status = base_response_dict['status']
     if base_status == "Fail": 

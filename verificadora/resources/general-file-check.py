@@ -12,7 +12,11 @@ def detect_separator(data):
     return dialect.delimiter
 
 def utf8_validation(data):
-    encoding = cchardet.detect(data)['encoding']
+    try:
+        encoding = cchardet.detect(data)['encoding']
+    except:
+        enconding= "No UTF-8"
+    
     if encoding != "UTF-8": 
         status = "Fail"
         reason = "No se detectó la codificación del Archivo, Verifica que esté guardado como UTF-8"
@@ -23,7 +27,10 @@ def utf8_validation(data):
     return response
 
 def separator_validation(data):
-    separator = detect_separator(data)
+    try:
+        separator = detect_separator(data)
+    except:
+        separator = "No ,"
     if separator == ",":
         status = "Pass"
         reason = "Coma"
@@ -58,7 +65,7 @@ def return_validation(filepath):
 
 def return_reqs():
     status = "general-file-check"
-    response = {"unit":"row","number":"5","sampling":"random"}
+    response = {"unit":"row","number":"5","sampling":"random","raw":"true"}
     output_dict = {"status":status, "response":response}
     return output_dict
 
