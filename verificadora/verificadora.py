@@ -13,7 +13,7 @@ from filtercsv import *
 __author__ = "Codeando México"
 __credits__ = "Ricardo Alanís, Miguel Salazar, Miguel Ángel Gordián"
 __license__ = "GPL"
-__version__ = "0.5"
+__version__ = "0.05"
 __status__ = "Prototype"
 
 CONFIGFILE = ".validadora"
@@ -43,7 +43,7 @@ def csv_validation(filename):
     extension = extract_extension(filename)
     if extension == "csv": 
         status = "Pass"
-        reason = "Se detectó la codificación csv"
+        reason = "CSV extension was detected"
     else:
         status = "Fail"
         reason = extension   
@@ -54,10 +54,10 @@ def morethan1line_validation(filename):
     test_result = verify_morethan11ine(filename)
     if test_result == 1 : 
         status = "Pass"
-        reason = "El archivo cuenta con más de una fila"
+        reason = "The given File has more than one line"
     else:
         status = "Fail"
-        reason = "El archivo no cuenta con contenido suficiente, verificar que al menos tenga una fila de valores"
+        reason = "The given file does not have enough content, double check that it has at least one row of values"
     response = {"status":status,"reason":reason}
     return response
 
