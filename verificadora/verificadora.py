@@ -1,5 +1,6 @@
 from os import getcwd
 import argparse
+import logging
 import subprocess
 import random
 import sys
@@ -109,6 +110,7 @@ def get_args():
     return parser.parse_args()
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     args = get_args()
     dataset = args.dataset
     resources = args.resources
@@ -117,11 +119,11 @@ def main():
     base_response_dict = base_validation(dataset)
     base_status = base_response_dict['status']
     if base_status == "Fail": 
-        print(base_response_dict)
+        logging.info("Error: ", base_response_dict)
         sys.exit() 
     resource_list = load_resources(resources)
     response_dict = run_validators(resource_list, dataset)
-    print(response_dict)
+    logging.info("Respuesta: ", response_dict)
 
 if __name__ == "__main__":
     main()
