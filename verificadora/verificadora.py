@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from os import getcwd
 import argparse
 import logging
@@ -8,7 +10,14 @@ import sys
 from tools import *
 from filtercsv import *
 
-RESOURCES_DIR="resources"
+__author__ = "Codeando México"
+__credits__ = "Ricardo Alanís, Miguel Salazar, Miguel Ángel Gordián"
+__license__ = "GPL"
+__version__ = "0.5"
+__status__ = "Prototype"
+
+CONFIGFILE = ".validadora"
+RESOURCES_DIR = "resources"
 COMPILER_FILE = "compilers.json"
 
 CURRENT_DIRECTORY = getcwd()
@@ -24,7 +33,7 @@ def response_status(response_dict):
 def verify_morethan11ine(filename):
     count = 0
     valor = 0
-    with open(filename,"rb") as fp:
+    with open(filename, 'rb') as fp:
         for line in fp:
             count = count + 1
             if count > 1: valor = 1
@@ -53,6 +62,14 @@ def morethan1line_validation(filename):
     return response
 
 def base_validation(filename):
+    """
+    Performs a base validation of a dataset. Specifically:
+    * CSV extention
+    * File has more than one line
+
+    :param filename: Dataset filename.
+    :return output_dict: A dictionary with the response codes.
+    """
     csv_response = csv_validation(filename)
     morethan1line_response = morethan1line_validation(filename)
     response_dict = {"csv": csv_response, "morethan1line":morethan1line_response}
@@ -65,10 +82,10 @@ def load_resources(resources_filename):
     return data['resources']
 
 
-def call_local_resource(resource,filename = None):
+def call_local_resource(resource, filename=None):
     resource_path = RESOURCES_DIR + "/" + resource
-    compiler_dictionary = load_json(COMPILER_FILE)
-    compiler = detect_compiler(resource,compiler_dictionary)
+    command = get_launcher(resource)
+    
     if filename is None: 
         output = subprocess.check_output([compiler,resource_path])
     else:
@@ -80,7 +97,6 @@ def get_requirements(resource,id_api):
     if id_api == 1: return None
     requirements = call_local_resource(resource)
     return requirements
-
 
 def get_resource_results(resource,filename, id_api):
     if id_api == 1: return None
@@ -110,21 +126,38 @@ def get_args():
     parser.add_argument('--resources')
     return parser.parse_args()
 
+def get_launcher(plugin):
+    executable = os.path.basename(plugin)
+    extension = executable.split('.')[-1]
+
+    compilers = load_json(COMPILER_FILE)
+    if extension in compilers:
+        command = compilers[extension]
+    
+    return command
+
 def main():
     logging.basicConfig(level=logging.INFO)
+    global config
+    config = configparser.ConfigParser()
+    config.read(CONFIGFILE)
     args = get_args()
     dataset = args.dataset
     resources = args.resources
 
     compiler_dictionary = load_json(COMPILER_FILE)
+    # Base validation should be a validator on its own.
     base_response_dict = base_validation(dataset)
+
     base_status = base_response_dict['status']
     if base_status == "Fail": 
         logging.info("Error: ", base_response_dict)
-        sys.exit() 
+        sys.exit()
+
+    # Resources must be loaded from the resources directory, not from a json.
     resource_list = load_resources(resources)
     response_dict = run_validators(resource_list, dataset)
-    logging.info("Respuesta: ", response_dict)
+    logging.info("Response: %s", response_dict)
 
 if __name__ == "__main__":
     main()
