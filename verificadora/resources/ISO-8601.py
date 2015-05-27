@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-import sys
 import json
 import csv
 import iso8601
+import argparse
 
 def stringify_columns(column_list):
     string = ""
@@ -70,10 +70,21 @@ def return_reqs():
     output_dict = {"status":status, "response":response}
     return output_dict
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset')
+    return parser.parse_args()
 
-if len(sys.argv) == 1:
-    output_dict = return_reqs()
-else:
-    #print sys.argv[1]
-    output_dict = return_validation(sys.argv[1])
-print(json.dumps(output_dict))
+def main():
+    args = get_args()
+    dataset = args.dataset
+    if dataset is None:
+        output_dict = return_reqs()
+    else:
+        output_dict = return_validation(dataset)
+    print(json.dumps(output_dict))
+
+
+if __name__ == "__main__":
+    main()
+
