@@ -1,4 +1,5 @@
 from os import getcwd
+import argparse
 import subprocess
 import random
 import sys
@@ -6,8 +7,6 @@ import sys
 from tools import *
 from filtercsv import *
 
-FILE = sys.argv[1]
-RESOURCES_FILE = sys.argv[2]
 RESOURCES_DIR="resources"
 COMPILER_FILE = "compilers.json"
 
@@ -94,24 +93,34 @@ def call_resource(resource,filename):
     resource_return = get_resource_results(resource,filtered_csv,id_api)
     return resource_return
 
-def run_validators(resource_list):
+def run_validators(resource_list, dataset):
     status = "Pass"
     response_dict = {}
     for resource in resource_list:
-        response_dict[resource]= call_resource(resource,FILE)
+        response_dict[resource]= call_resource(resource, dataset)
         if response_status(response_dict) != "Pass": status = "Fail"
     return_dict = {"status":status,"detail":response_dict}
     return return_dict
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset')
+    parser.add_argument('--resources')
+    return parser.parse_args()
+
 def main():
+    args = get_args()
+    dataset = args.dataset
+    resources = args.resources
+
     compiler_dictionary = load_json(COMPILER_FILE)
-    base_response_dict = base_validation(FILE)
+    base_response_dict = base_validation(dataset)
     base_status = base_response_dict['status']
     if base_status == "Fail": 
         print(base_response_dict)
         sys.exit() 
-    resource_list = load_resources(RESOURCES_FILE)
-    response_dict = run_validators(resource_list)
+    resource_list = load_resources(resources)
+    response_dict = run_validators(resource_list, dataset)
     print(response_dict)
 
 if __name__ == "__main__":
