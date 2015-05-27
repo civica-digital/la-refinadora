@@ -101,6 +101,7 @@ def run_validators(resource_list, dataset):
         response_dict[resource]= call_resource(resource, dataset)
         if response_status(response_dict) != "Pass": status = "Fail"
     return_dict = {"status":status,"detail":response_dict}
+    logging.info("Response %s",return_dict)
     return return_dict
 
 def get_args():
