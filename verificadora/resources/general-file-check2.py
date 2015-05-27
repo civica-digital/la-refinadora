@@ -58,7 +58,7 @@ def return_validation(filepath):
 
 def return_reqs():
     status = "general-file-check"
-    response = {"unit":"row","number":"5","sampling":"random"}
+    response = {"unit":"row","number":"5","sampling":"random","raw":"true"}
     output_dict = {"status":status, "response":response}
     return output_dict
 
