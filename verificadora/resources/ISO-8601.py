@@ -6,6 +6,12 @@ import iso8601
 import argparse
 
 def stringify_columns(column_list):
+    """
+    Detector: Detects if the given data has values in ISO 8601 format
+
+    :param column_list: list of columns with valid date values.
+    :return string: returns a string with the columns with valid ISO 8601 data
+    """
     string = ""
     for number in column_list:
         if len(column_list)>1 and (column_list.index(number) == len(column_list-1)):
@@ -17,6 +23,12 @@ def stringify_columns(column_list):
     return string
 
 def detect_columns_dates(data):
+    """
+    Detector: Detects if the given data has values in ISO 8601 format
+
+    :param data: data to work with.
+    :return dialect.delimiter: returns a string with the columns with valid ISO 8601 data
+    """
     correct_values = 0
     values_read = 0
     correct_columns_list = []
@@ -34,6 +46,12 @@ def detect_columns_dates(data):
     return correct_columns_string
 
 def date_validation(data):
+        """
+    Validator: Detects if the data has dates in a ISO 8601 compatible format
+
+    :param data: data to work with.
+    :return response: returns a response dictionary for the date validation, with a status key and a response key.
+    """
     column_with_valid_dates = detect_columns_dates(data)
     if column_with_valid_dates == "": 
         status = "Fail"
@@ -57,6 +75,12 @@ def response_status(response_dict):
     return status
 
 def return_validation(filepath):
+    """
+    Returns validation dictionary. Calls all validations of this set.
+
+    :param filepath: Path of the data file to work with.
+    :return output_dict: returns a response dictionary with a status key and a response key, with the validations made to the file.
+    """
     sample = read_sample(filepath)
     date_response = date_validation(sample)
     response_dict = {"ISO-8601": date_response}
@@ -65,6 +89,11 @@ def return_validation(filepath):
     return output_dict
 
 def return_reqs():
+    """
+    Returns requirements, when this code is called with no arguments.
+
+    :return : returns a response dictionary with a status key and a response key, with requirements needed by the plugin.
+    """
     status = "ISO-8601"
     response = {"unit":"row","number":"20","sampling":"random","raw":"false"}
     output_dict = {"status":status, "response":response}

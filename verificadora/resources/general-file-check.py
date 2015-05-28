@@ -7,11 +7,23 @@ import cchardet
 
 
 def detect_separator(data):
+    """
+    Detector: Detects the separator used by the data
+
+    :param data: data to work with.
+    :return dialect.delimiter: returns delimiter found in the data
+    """
     sniffer = csv.Sniffer()
     dialect = sniffer.sniff(data.decode("UTF-8"))
     return dialect.delimiter
 
 def utf8_validation(data):
+    """
+    Validator: Detects if the data is in utf-8 format
+
+    :param data: data to work with.
+    :return response: returns a response dictionary for the utf-8 validation, with a status key and a response key.
+    """
     try:
         encoding = cchardet.detect(data)['encoding']
     except:
@@ -27,6 +39,12 @@ def utf8_validation(data):
     return response
 
 def separator_validation(data):
+    """
+    Validator: Detects if the data has coma as separator
+
+    :param data: data to work with.
+    :return response: returns a response dictionary for the coma, with a status key and a response key.
+    """
     try:
         separator = detect_separator(data)
     except:
@@ -55,6 +73,12 @@ def response_status(response_dict):
     return status
 
 def return_validation(filepath):
+    """
+    Returns validation dictionary. Calls all validations of this set.
+
+    :param filepath: Path of the data file to work with.
+    :return output_dict: returns a response dictionary with a status key and a response key, with the validations made to the file.
+    """
     sample = read_sample(filepath)
     utf8_response = utf8_validation(sample)
     separator_response = separator_validation(sample)
@@ -64,6 +88,11 @@ def return_validation(filepath):
     return output_dict
 
 def return_reqs():
+    """
+    Returns requirements, when this code is called with no arguments.
+
+    :return : returns a response dictionary with a status key and a response key, with requirements needed by the plugin.
+    """
     status = "general-file-check"
     response = {"unit":"row","number":"5","sampling":"random","raw":"true"}
     output_dict = {"status":status, "response":response}
