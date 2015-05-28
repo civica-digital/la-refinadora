@@ -69,6 +69,15 @@ def write_data_raw(data):
     return file_path
 
 def csv_data_filter(filename,unit, sampling, number_units = 0):
+    """
+    Function to filter CSV files.
+
+    :param filename: dataset filename.
+    :param unit: unit to filter, "file" for complete file, "title" for column titles, "row" for rows
+    :param sampling: whether rows should be taken randomly or from the top of the file
+    :param number_units: Number of units to take from the file, only works on rows now.
+    :return temp_data_path: returns filename of the temporary filtered file to use.
+    """
     with open(filename, 'r') as f: n_lines = sum(1 for row in f)
     with open(filename, 'r') as f:
         rowdata = []
@@ -96,6 +105,15 @@ def csv_data_filter(filename,unit, sampling, number_units = 0):
     return temp_data_path 
 
 def raw_data_filter(filename,unit,sampling,number_units = 0):
+     """
+    CSV-Agnostic - takes any file - function to filter data.
+
+    :param filename: dataset filename.
+    :param unit: unit to filter, "file" for complete file, "title" for column titles, "row" for rows
+    :param sampling: whether rows should be taken randomly or from the top of the file
+    :param number_units: Number of units to take from the file, only works on rows now.
+    :return temp_data_path: returns filename of the temporary filtered file to use.
+    """
     data = b''
     if unit == "file":
         data = read_file(filename)
@@ -115,6 +133,15 @@ def raw_data_filter(filename,unit,sampling,number_units = 0):
 
 
 def filter_data(raw,unit,filename,sampling,number_units = 0):
+    """
+    Gets the filtering parameters and then decides wheter to use the csv-based filter or the general filtering function
+
+    :param filename: dataset filename.
+    :param unit: unit to filter, "file" for complete file, "title" for column titles, "row" for rows
+    :param sampling: whether rows should be taken randomly or from the top of the file
+    :param number_units: Number of units to take from the file, only works on rows now.
+    :return temp_data_path: returns filename of the temporary filtered file to use.
+    """
     if raw == "true":
         temp_data_path = raw_data_filter(filename,unit,sampling,number_units)
     else:
@@ -122,6 +149,14 @@ def filter_data(raw,unit,filename,sampling,number_units = 0):
     return temp_data_path
 
 def prepare_csv(csv_requirements,filename,resource):
+    """
+    Gets resource requirements and gets filtering parameters, then procedes to filter the data and gets the temporary file which such filter.
+
+    :param csv_requirements: gets the requirements reponse from resource.
+    :param filename: dataset filename.
+    :param filename: resource filename.
+    :return temp_data_path: returns filename of the temporary filtered file to use.
+    """
     requirements = csv_requirements["response"]
     number_units = int(requirements["number"]) #Un número de 1 al numero de filas o columnas 
     sampling = requirements["sampling"] #random, first, last
