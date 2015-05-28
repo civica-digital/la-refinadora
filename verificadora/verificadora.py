@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from os import getcwd
+from os import path
 import argparse
 import logging
 import subprocess
 import random
 import sys
+import configparser
 
 from tools import *
 from filtercsv import *
@@ -83,13 +85,12 @@ def load_resources(resources_filename):
 
 
 def call_local_resource(resource, filename=None):
-    resource_path = RESOURCES_DIR + "/" + resource
+    resource_path =  RESOURCES_DIR + "/" + resource
     command = get_launcher(resource)
-    
     if filename is None: 
-        output = subprocess.check_output([compiler,resource_path])
+        output = subprocess.check_output([command,resource_path])
     else:
-        output = subprocess.check_output([compiler,resource_path,filename])
+        output = subprocess.check_output([command,resource_path,"--dataset",filename])
     output_dict = json.loads(output.decode("utf-8"))
     return output_dict
 
@@ -117,7 +118,6 @@ def run_validators(resource_list, dataset):
         response_dict[resource]= call_resource(resource, dataset)
         if response_status(response_dict) != "Pass": status = "Fail"
     return_dict = {"status":status,"detail":response_dict}
-    logging.info("Response %s",return_dict)
     return return_dict
 
 def get_args():
@@ -127,7 +127,7 @@ def get_args():
     return parser.parse_args()
 
 def get_launcher(plugin):
-    executable = os.path.basename(plugin)
+    executable = path.basename(plugin)
     extension = executable.split('.')[-1]
 
     compilers = load_json(COMPILER_FILE)

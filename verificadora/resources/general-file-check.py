@@ -22,7 +22,7 @@ def utf8_validation(data):
         reason = "Could not detect file encoding, please double-check if it is saved as UTF-8."
     else:
         status= "Pass"
-        reason = "Se detectó la codificación UTF-8"
+        reason = "UTF-8 encoding detected"
     response = {"status":status,"reason":reason}
     return response
 
@@ -39,7 +39,7 @@ def separator_validation(data):
         reason="Valid CSV Separator, coma is the common default separator."
     else:
         status= "Fail"
-        reason = "Separador Inválido detectado"
+        reason = "Invalid separator detected"
     response = {"status":status,"reason":reason}
     return response
 
