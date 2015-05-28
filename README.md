@@ -48,31 +48,31 @@ Each verification requires to have two calls:
 
 - Call without any files: In which case the plugin will answer with a json with the requirements of the verificator with the form:
 
-	{  
-	   "status":"general-file-check",
-	   "response":{  
-	      "raw":"true",
-	      "unit":"row",
-	      "number":"5",
-	      "sampling":"random"
-	   }
-	}
+		{  
+		   "status":"general-file-check",
+		   "response":{  
+		      "raw":"true",
+		      "unit":"row",
+		      "number":"5",
+		      "sampling":"random"
+		   }
+		}
 
 - Call with `--dataset file.csv`, which in turn will return a status response of the form:
 
-	{  
-	   "status":"Pass",
-	   "validators":{  
-	      "separator":{  
-	         "status":"Pass",
-	         "reason":"Coma"
-	      },
-	      "utf-8":{  
-	         "status":"Pass",
-	         "reason":"UTF-8 encoding detected"
-	      }
-	   }
-}
+		{  
+		   "status":"Pass",
+		   "validators":{  
+		      "separator":{  
+		         "status":"Pass",
+		         "reason":"Coma"
+		      },
+		      "utf-8":{  
+		         "status":"Pass",
+		         "reason":"UTF-8 encoding detected"
+		      }
+		   }
+		}
 
 
 #### Recommended Plugin Pseudocode Structure
