@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
+import argparse
 import csv
 import json
-import logging
 import re
 import sys
 from statistics import mode
 from random import random
 
-def is_rectangular(data):
+def is_rectangular(filepath):
     """ 
     Validates that the CSV file has a rectangular structure.
     """
-    with open(data, 'r') as f:
+    with open(filepath, 'r') as f:
         reader = csv.reader(f)
         headers = next(reader)
         header_columns = len(headers)
@@ -38,11 +38,11 @@ def is_rectangular(data):
                 response = { "status": status, "reason": reason }
     return response
 
-def complete_cols(data):
+def complete_cols(filepath):
     """ 
     Validates from a representative sample size that data columns are complete.
     """
-    with open(data, 'r') as f:
+    with open(filepath, 'r') as f:
         reader = csv.reader(f)
         headers = next(reader)
         header_columns = len(headers)
@@ -66,7 +66,7 @@ def complete_cols(data):
     # Reservoir Sampling
     sample_cols = []
     chances = sample_size/row_count
-    with open(data, 'r') as f:
+    with open(filepath, 'r') as f:
         reader = csv.reader(f)
         next(reader)
 
@@ -86,13 +86,13 @@ def complete_cols(data):
 
     return response
 
-def has_alphanumeric_headers(data):
+def has_alphanumeric_headers(filepath):
     """ 
     Validates that the header names contains only letters, numbers, dashes, and underscores.
     """
     regexp = re.compile('[^A-Za-z0-9-]')
     response = {}
-    with open(data, 'r') as f:
+    with open(filepath, 'r') as f:
         reader = csv.reader(f)
         headers = next(reader)
         for column_number, column_name in enumerate(headers, start=1):
@@ -108,22 +108,62 @@ def has_alphanumeric_headers(data):
                 response = { "status": status, "reason": reason }
     return response
 
+def response_status(response_dict):
+    status = "Pass"
+    for response in response_dict.keys():
+        if response_dict[response]['status'] == "Fail": status = "Fail"
+    return status
+
+def run_validations(filepath):
+    """
+    Returns validation dictionary. Calls all validations of this set.
+
+    :param filepath: Path of the data file to work with.
+    :return output_dict: returns a response dictionary with a status key and a response key, with the validations made to the file.
+    """
+    responses = {}
+    validation_results = {}
+    
+    alphanumeric_reponse = has_alphanumeric_headers(filepath)
+    complete_cols_response = complete_cols(filepath)
+    rectangularity_reponse = is_rectangular(filepath)
+
+    responses['Valid headers names'] = alphanumeric_reponse
+    responses['Complete columns'] = complete_cols_response
+    responses['Dataset rectangularity'] = rectangularity_reponse
+
+    validators = { "Column checker": responses }
+    status = response_status(responses)
+    validation_results = { "status": status, "validators": validators }
+
+    return validation_results
+
+def return_reqs():
+    """
+    Returns requirements, when this code is called with no arguments.
+
+    :return : returns a response dictionary with a status key and a response key, with requirements needed by the plugin.
+    """
+    status = "Column checker"
+    response = {}
+    output_dict = { "status": status, "response": response }
+    return output_dict
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset')
+    return parser.parse_args()
+
 def main():
-    logging.basicConfig(level=logging.INFO)
-    data = '../tramites_lerma.csv'
-    
-    headers_response = has_headers(data)
-    rectangularity_reponse = is_rectangular(data)
-    complete_cols_response = complete_cols(data)
-    alphanumeric_reponse = has_alphanumeric_headers(data)
-    print(alphanumeric_reponse)
-    
-    #if len(sys.argv) == 1:
-    #    output_dict = return_reqs()
-    #else:
-        #print sys.argv[1]
-    #    output_dict = return_validation(sys.argv[1])
-    #print(json.dumps(output_dict))
+    args = get_args()
+    dataset = args.dataset
+
+    if dataset is None:
+        requirements = return_reqs()
+        print(json.dumps(requirements))
+    else:
+        validation_results = run_validations(dataset)
+        print(json.dumps(validation_results))
 
 if __name__ == '__main__':
     main()
