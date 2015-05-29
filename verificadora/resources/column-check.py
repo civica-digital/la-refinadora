@@ -7,23 +7,6 @@ import sys
 from statistics import mode
 from random import random
 
-def has_headers(data):
-    """ 
-    Validates that the CSV file has header columns.
-    """
-    with open(data, 'r') as f:
-        has_header = csv.Sniffer().has_header(f.read(1024))
-    response = {}
-    if has_header:
-        status = "Pass"
-        reason = "CSV file has a rectangular structure."
-        response = { "status": status, "reason": reason }
-    else:
-        status = "Fail"
-        reason = "File appear to have no headers."
-        response = { "status": status, "reason": reason }
-    return response
-
 def is_rectangular(data):
     """ 
     Validates that the CSV file has a rectangular structure.
@@ -55,12 +38,10 @@ def is_rectangular(data):
                 response = { "status": status, "reason": reason }
     return response
 
-# Nombres de columnas completos = Que la primera fila de columnas tenga el mismo número que los valores.
 def complete_cols(data):
     """ 
     Validates from a representative sample size that data columns are complete.
     """
-
     with open(data, 'r') as f:
         reader = csv.reader(f)
         headers = next(reader)
@@ -109,31 +90,33 @@ def has_alphanumeric_headers(data):
     """ 
     Validates that the header names contains only letters, numbers, dashes, and underscores.
     """
-    regexp = re.compile('^[A-Za-z0-9-]')
+    regexp = re.compile('[^A-Za-z0-9-]')
     response = {}
     with open(data, 'r') as f:
         reader = csv.reader(f)
         headers = next(reader)
         for column_number, column_name in enumerate(headers, start=1):
-            if regexp.match(column_name):
+            print(regexp.search(column_name))
+            if regexp.search(column_name):
+                status = "Fail"
+                reason = """Column name {column_name} in column {column_number} has an invalid name. Please use only letters, numbers, and dashes.""".format(column_name=column_name, column_number=column_number)
+                response = { "status": status, "reason": reason }
+                return response 
+            else:
                 status = "Pass"
                 reason = "Headers have valid names."
                 response = { "status": status, "reason": reason }
-            else:
-                status = "Fail"
-                reason = """Column name {column_name} in column {column_number} has an invalid name. 
-                            Please use only letters, numbers, dashes and underscores.""".format(column_name=column_name, column_number=column_number)
-                response = { "status": status, "reason": reason }
-                return response
     return response
 
 def main():
     logging.basicConfig(level=logging.INFO)
     data = '../tramites_lerma.csv'
+    
     headers_response = has_headers(data)
     rectangularity_reponse = is_rectangular(data)
     complete_cols_response = complete_cols(data)
     alphanumeric_reponse = has_alphanumeric_headers(data)
+    print(alphanumeric_reponse)
     
     #if len(sys.argv) == 1:
     #    output_dict = return_reqs()
