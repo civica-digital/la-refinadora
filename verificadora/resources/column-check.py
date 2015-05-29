@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import csv
 import json
+import logging
 import re
 import sys
 from statistics import mode
@@ -12,7 +13,7 @@ def has_headers(data):
     """
     with open(data, 'r') as f:
         has_header = csv.Sniffer().has_header(f.read(1024))
-    reponse = {}
+    response = {}
     if has_header:
         status = "Pass"
         reason = "CSV file has a rectangular structure."
@@ -21,7 +22,7 @@ def has_headers(data):
         status = "Fail"
         reason = "File appear to have no headers."
         response = { "status": status, "reason": reason }
-    return reponse
+    return response
 
 def is_rectangular(data):
     """ 
@@ -69,7 +70,7 @@ def complete_cols(data):
 
     response = {}
     
-    if row_count < 1000:
+    if row_count < 1000 and row_count > 1:
         sample_size = row_count
     elif row_count > 1000:
         # Determines the sample size based on Slovin's formula at a 97% confidence level
@@ -78,8 +79,8 @@ def complete_cols(data):
         slovin = row_count/(1.0 + (row_count*(error**2)))
         sample_size = round(slovin)
     else:
-        # Error
-        pass
+        logging.error("You must provide at least one data column.")
+        return 0
     
     # Reservoir Sampling
     sample_cols = []
@@ -93,7 +94,7 @@ def complete_cols(data):
                 columns = len(row)
                 sample_cols.append(columns)
 
-    if mode[sample_cols] == header_columns:
+    if mode(sample_cols) == header_columns:
         status = "Pass"
         reason = "Columns are complete."
         response = { "status": status, "reason": reason }
@@ -102,7 +103,7 @@ def complete_cols(data):
         reason = "Columns are not complete."
         response = { "status": status, "reason": reason }
 
-    return reponse
+    return response
 
 def has_alphanumeric_headers(data):
     """ 
@@ -127,6 +128,7 @@ def has_alphanumeric_headers(data):
     return response
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     data = '../tramites_lerma.csv'
     headers_response = has_headers(data)
     rectangularity_reponse = is_rectangular(data)
