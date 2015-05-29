@@ -3,6 +3,8 @@ import csv
 import json
 import re
 import sys
+from statistics import mode
+from random import random
 
 def has_headers(data):
     """ 
@@ -55,7 +57,7 @@ def is_rectangular(data):
 # Nombres de columnas completos = Que la primera fila de columnas tenga el mismo número que los valores.
 def complete_cols(data):
     """ 
-    Validates that the CSV file has a rectangular structure.
+    Validates from a representative sample size that data columns are complete.
     """
 
     with open(data, 'r') as f:
@@ -63,30 +65,44 @@ def complete_cols(data):
         headers = next(reader)
         header_columns = len(headers)
         next(reader)
-
-        response = {}
-
         row_count = sum(1 for row in reader)
 
-        if row_count < 1000:
-            sample_size = 1000
-            pass
-        elif row_count > 1000:
-            # Determines the sample size based on Slovin's formula at a 95% confidence level
-            confidence_level = 95.0
-            error = 1.0-(confidence_level/100)
-            sample_size = row_count/(1 + (row_count*(error*error)))
-        else:
-            # Error
-            pass
+    response = {}
+    
+    if row_count < 1000:
+        sample_size = row_count
+    elif row_count > 1000:
+        # Determines the sample size based on Slovin's formula at a 97% confidence level
+        confidence_level = 97.0
+        error = 1.0-(confidence_level/100)
+        slovin = row_count/(1.0 + (row_count*(error**2)))
+        sample_size = round(slovin)
+    else:
+        # Error
+        pass
+    
+    # Reservoir Sampling
+    sample_cols = []
+    chances = sample_size/row_count
+    with open(data, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)
 
-        samples = []
-        chances_selected = sample_size/row_count
+        for row_number, row in enumerate(reader, start=1):
+            if random() < chances:
+                columns = len(row)
+                sample_cols.append(columns)
 
-        for row in csv.reader(f):
-            if random() < chances_selected:
-                samples.append(line)
-    return samples
+    if mode[sample_cols] == header_columns:
+        status = "Pass"
+        reason = "Columns are complete."
+        response = { "status": status, "reason": reason }
+    else:
+        status = "Fail"
+        reason = "Columns are not complete."
+        response = { "status": status, "reason": reason }
+
+    return reponse
 
 def has_alphanumeric_headers(data):
     """ 
@@ -116,18 +132,13 @@ def main():
     rectangularity_reponse = is_rectangular(data)
     complete_cols_response = complete_cols(data)
     alphanumeric_reponse = has_alphanumeric_headers(data)
-
-    r = complete_cols('../tramites_lerma.csv')
-    print(r)
-    sys.exit(1)
     
-
-    if len(sys.argv) == 1:
-        output_dict = return_reqs()
-    else:
+    #if len(sys.argv) == 1:
+    #    output_dict = return_reqs()
+    #else:
         #print sys.argv[1]
-        output_dict = return_validation(sys.argv[1])
-    print(json.dumps(output_dict))
+    #    output_dict = return_validation(sys.argv[1])
+    #print(json.dumps(output_dict))
 
 if __name__ == '__main__':
     main()
