@@ -105,7 +105,7 @@ def csv_data_filter(filename,unit, sampling, number_units = 0):
     return temp_data_path 
 
 def raw_data_filter(filename,unit,sampling,number_units = 0):
-     """
+    """
     CSV-Agnostic - takes any file - function to filter data.
 
     :param filename: dataset filename.
@@ -132,7 +132,7 @@ def raw_data_filter(filename,unit,sampling,number_units = 0):
     return temp_data_path
 
 
-def filter_data(raw,unit,filename,sampling,number_units = 0):
+def filter_data(filename,raw ,unit  ,sampling ,number_units):
     """
     Gets the filtering parameters and then decides wheter to use the csv-based filter or the general filtering function
 
@@ -157,10 +157,16 @@ def prepare_csv(csv_requirements,filename,resource):
     :param filename: resource filename.
     :return temp_data_path: returns filename of the temporary filtered file to use.
     """
-    requirements = csv_requirements["response"]
-    number_units = int(requirements["number"]) #Un número de 1 al numero de filas o columnas 
-    sampling = requirements["sampling"] #random, first, last
-    unit = requirements["unit"] # rows, title, file, columns
-    raw = requirements["raw"]
-    temp_data_path = filter_data(raw,unit,filename, sampling, number_units)
+
+    raw = "raw"
+    unit = "row"
+    sampling = "random"
+    number_units = 0
+
+    if "response" in csv_requirements: requirements = csv_requirements["response"]
+    if "number" in csv_requirements: number_units = int(requirements["number"]) #Un número de 1 al numero de filas o columnas 
+    if "sampling" in csv_requirements: sampling = requirements["sampling"] #random, first, last
+    if "unit" in csv_requirements: unit = requirements["unit"] # rows, title, file, columns
+    if "raw" in csv_requirements: raw = requirements["raw"]
+    temp_data_path = filter_data(filename, raw, unit, sampling, number_units)
     return temp_data_path

@@ -74,7 +74,7 @@ def csv_validation(filename):
     return response
 
 def morethan1line_validation(filename):
-     """
+    """
     Detects and returns wether or not the file veing analyzed has more than 1 line.
     
     :param filename: name of the file
