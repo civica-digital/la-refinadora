@@ -1,5 +1,6 @@
 {
   "resources": [
-    "general-file-check.py"
+    "general-file-check.py",
+    "data-check.py"
   ]
 }
