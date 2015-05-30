@@ -7,7 +7,6 @@ import logging
 import subprocess
 import random
 import sys
-import configparser
 
 from tools import *
 from filtercsv import *
@@ -19,8 +18,10 @@ __version__ = "0.05"
 __status__ = "Prototype"
 
 CONFIGFILE = ".validadora"
-RESOURCES_DIR = "resources"
-COMPILER_FILE = "compilers.json"
+config_dict = load_config(CONFIGFILE)
+
+RESOURCES_DIR = config_dict["general"]["resources_dir"]
+COMPILER_FILE = config_dict["general"]["compiler_file"]
 
 CURRENT_DIRECTORY = getcwd()
 RESOURCES_FULLPATH = CURRENT_DIRECTORY + "/" + RESOURCES_DIR
@@ -106,9 +107,10 @@ def base_validation(filename):
     output_dict = {"status":status,"validators":response_dict}
     return output_dict
 
-def load_resources(resources_filename):
-    data = load_json(resources_filename)
-    return data['resources']
+def load_resources(config_dict):
+    resources = config_dict["general"]["resources"]
+    resources_list = resources.split(",")
+    return resources_list
 
 
 def call_local_resource(resource, filename=None):
@@ -186,7 +188,6 @@ def run_validators(resource_list, dataset):
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset')
-    parser.add_argument('--resources')
     return parser.parse_args()
 
 def get_launcher(plugin):
@@ -206,7 +207,6 @@ def main():
     config.read(CONFIGFILE)
     args = get_args()
     dataset = args.dataset
-    resources = args.resources
 
     compiler_dictionary = load_json(COMPILER_FILE)
     # Base validation should be a validator on its own.
@@ -218,7 +218,7 @@ def main():
         sys.exit()
 
     # Resources must be loaded from the resources directory, not from a json.
-    resource_list = load_resources(resources)
+    resource_list = load_resources(config_dict)
     response_dict = run_validators(resource_list, dataset)
     logging.info("Response: %s", response_dict)
 

@@ -1,0 +1,4 @@
+[general]
+resources_dir=resources
+compiler_file=compilers.json
+resources=general-file-check.py,data-check.py
