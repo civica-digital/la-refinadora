@@ -3,8 +3,6 @@ import random
 import time
 import csv
 
-TMP_DIR="tmp"
-
 def read_file(filepath):
     with open (filepath, "rb") as myfile:
         data=myfile.read()
@@ -52,7 +50,7 @@ def read_random_lines(filename, N,n_lines):
         fp.close()
     return data
 
-def write_data_list(data):
+def write_data_list(data,TMP_DIR):
     sample_filename = generate_random_filename()
     file_path= TMP_DIR + "/" + sample_filename
     with open(file_path, "w") as file_write:
@@ -60,7 +58,7 @@ def write_data_list(data):
         writer.writerow(data)
     return file_path
 
-def write_data_raw(data):
+def write_data_raw(data,TMP_DIR):
     sample_filename = generate_random_filename()
     file_path= TMP_DIR + "/" + sample_filename
     file_write = open(file_path, 'wb')
@@ -68,7 +66,7 @@ def write_data_raw(data):
     file_write.close()
     return file_path
 
-def csv_data_filter(filename,unit, sampling, number_units = 0):
+def csv_data_filter(filename,unit, sampling, number_units,TMP_DIR):
     """
     Function to filter CSV files.
 
@@ -101,10 +99,10 @@ def csv_data_filter(filename,unit, sampling, number_units = 0):
             else:
                 rowdata.append(row)
             count = count +1 
-    temp_data_path = write_data_list(rowdata)
+    temp_data_path = write_data_list(rowdata,TMP_DIR)
     return temp_data_path 
 
-def raw_data_filter(filename,unit,sampling,number_units = 0):
+def raw_data_filter(filename,unit,sampling,number_units,TMP_DIR):
     """
     CSV-Agnostic - takes any file - function to filter data.
 
@@ -128,11 +126,11 @@ def raw_data_filter(filename,unit,sampling,number_units = 0):
             data = read_top_lines(filename,number_units)
         elif sampling == "random":
             data = read_random_lines(filename,number_units,n_lines)
-    temp_data_path = write_data_raw(data)
+    temp_data_path = write_data_raw(data,TMP_DIR)
     return temp_data_path
 
 
-def filter_data(filename,raw ,unit  ,sampling ,number_units):
+def filter_data(filename,raw ,unit  ,sampling ,number_units,TMP_DIR):
     """
     Gets the filtering parameters and then decides wheter to use the csv-based filter or the general filtering function
 
@@ -143,12 +141,12 @@ def filter_data(filename,raw ,unit  ,sampling ,number_units):
     :return temp_data_path: returns filename of the temporary filtered file to use.
     """
     if raw == "true":
-        temp_data_path = raw_data_filter(filename,unit,sampling,number_units)
+        temp_data_path = raw_data_filter(filename,unit,sampling,number_units,TMP_DIR)
     else:
-        temp_data_path = csv_data_filter(filename,unit,sampling,number_units)
+        temp_data_path = csv_data_filter(filename,unit,sampling,number_units,TMP_DIR)
     return temp_data_path
 
-def prepare_csv(csv_requirements,filename,resource):
+def prepare_csv(csv_requirements,filename,resource,TMP_DIR):
     """
     Gets resource requirements and gets filtering parameters, then procedes to filter the data and gets the temporary file which such filter.
 
@@ -168,5 +166,5 @@ def prepare_csv(csv_requirements,filename,resource):
     if "sampling" in csv_requirements: sampling = requirements["sampling"] #random, first, last
     if "unit" in csv_requirements: unit = requirements["unit"] # rows, title, file, columns
     if "raw" in csv_requirements: raw = requirements["raw"]
-    temp_data_path = filter_data(filename, raw, unit, sampling, number_units)
+    temp_data_path = filter_data(filename, raw, unit, sampling, number_units,TMP_DIR)
     return temp_data_path

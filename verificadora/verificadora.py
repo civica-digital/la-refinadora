@@ -22,7 +22,9 @@ config_dict = load_config(CONFIGFILE)
 
 RESOURCES_DIR = config_dict["general"]["resources_dir"]
 COMPILER_FILE = config_dict["general"]["compiler_file"]
+TMP_DIR = config_dict["general"]["tmp_dir"]
 
+#Pending Directory call using os.path.
 CURRENT_DIRECTORY = getcwd()
 RESOURCES_FULLPATH = CURRENT_DIRECTORY + "/" + RESOURCES_DIR
 TEMP_FULLPATH = CURRENT_DIRECTORY + "/" + TMP_DIR
@@ -165,7 +167,7 @@ def call_resource(resource,filename):
     """
     id_api = detect_api(resource)
     resource_requirements = get_requirements(resource,id_api)
-    filtered_csv = prepare_csv(resource_requirements,filename,resource)
+    filtered_csv = prepare_csv(resource_requirements,filename,resource,TMP_DIR)
     resource_return = get_resource_results(resource,filtered_csv,id_api)
     return resource_return
 

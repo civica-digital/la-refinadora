@@ -1,4 +1,5 @@
 [general]
 resources_dir=resources
 compiler_file=compilers.json
+tmp_dir=tmp
 resources=general-file-check.py,data-check.py
