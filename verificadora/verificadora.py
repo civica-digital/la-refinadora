@@ -38,9 +38,9 @@ def response_status(response_dict):
             returns "Pass" otherwise.
     """ 
 
-    status = "Pass"
+    status = "Fail"
     for response in response_dict.keys():
-        if response_dict[response]['status'] == "Fail": status = "Fail"
+        if response_dict[response]['status'] == "Pass": status = "Pass"
     return status
 
 def verify_morethan11ine(filename):
@@ -114,6 +114,19 @@ def load_resources(config_dict):
     resources_list = resources.split(",")
     return resources_list
 
+def resource_error(resource,code):
+    """
+    Helps build a dictionary when a error when calliing a resource arises
+
+    :param resource: resource name in order to build error
+    :param code: code of error in order to add a reason to the error
+    :return return_dict: response dictionary when the call fails
+
+    """
+
+    return_dict = {status:"Error",code:code}
+    return return_dict
+
 
 def call_local_resource(resource, filename=None):
     """
@@ -144,6 +157,20 @@ def get_requirements(resource,id_api):
     requirements = call_local_resource(resource)
     return requirements
 
+def validate_response(resource,response):
+    """
+    Validates if the current response does have a "status" code.
+    
+    :param resource: resource filename.
+    :param response: current response.
+    :return response: response dictionary, which is changed to a error form if no "status" key found in dictionary
+    """
+    try:
+        resp_status =response["status"]
+    except:
+        response = resource_error(resource,"Invalid JSON form of response")
+    return response
+
 def get_resource_results(resource,filename, id_api):
     """
     Performs the call to the resource, in order to recieve the verification results.
@@ -154,7 +181,12 @@ def get_resource_results(resource,filename, id_api):
     :return response: returns response dictionary
     """
     if id_api == 1: return None
-    response = call_local_resource(resource,filename)
+    try:
+        response = call_local_resource(resource,filename)
+    except:
+        response = resource_error(resource,"Error calling local resource")
+
+    response = validate_response(resource,response)
     return response
 
 def call_resource(resource,filename):
