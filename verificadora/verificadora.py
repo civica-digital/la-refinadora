@@ -124,7 +124,7 @@ def resource_error(resource,code):
 
     """
 
-    return_dict = {status:"Error",code:code}
+    return_dict = {"status":"Error","code":code}
     return return_dict
 
 
