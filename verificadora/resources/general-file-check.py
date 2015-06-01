@@ -1,10 +1,9 @@
 #!/usr/bin/python
-
+import cchardet
+import csv
 import argparse
 import json
-import csv
-import cchardet
-
+import logging
 
 def detect_separator(data):
     """
@@ -62,8 +61,11 @@ def separator_validation(data):
     return response
 
 def read_sample(filepath):
-    with open (filepath, "rb") as myfile:
-        data=myfile.read()
+    try:
+        with open (filepath, "rb") as myfile:
+            data=myfile.read()
+    except FileNotFoundError as e:
+        logging.error(e)
     return data
 
 def response_status(response_dict):

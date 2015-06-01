@@ -4,7 +4,7 @@ import sys
 import json
 import csv
 import cchardet
-
+import logging
 
 def detect_separator(data):
     sniffer = csv.Sniffer()
@@ -37,8 +37,11 @@ def separator_validation(data):
     return response
 
 def read_sample(filepath):
-    with open (filepath, "rb") as myfile:
-        data=myfile.read()
+    try:
+        with open (filepath, "rb") as myfile:
+            data=myfile.read()
+    except FileNotFoundError as e:
+        logging.error(e)
     return data
 
 def response_status(response_dict):
@@ -62,7 +65,7 @@ def return_reqs():
     output_dict = {"status":status, "response":response}
     return output_dict
 
-
+logging.basicConfig(level=logging.INFO)
 if len(sys.argv) == 1:
     output_dict = return_reqs()
 else:

@@ -1,11 +1,10 @@
 #!/usr/bin/python
 
-import json
-import csv
 import argparse
+import csv
+import json
+import logging
 import re
-
-
 
 """
 The following functions detect string characteristics in order to see if a given value matches any of the criteria of things to avoid in a csv.
@@ -132,9 +131,12 @@ def data_validation(data):
     return response_dict
 
 def read_sample(dataset):
-    with open(dataset, 'r') as f:
-        reader = csv.reader(f)
-        data = list(reader)
+    try:
+        with open(dataset, 'r') as f:
+            reader = csv.reader(f)
+            data = list(reader)
+    except FileNotFoundError as e:
+        logging.error(e)
     return data
 
 def response_status(response_dict):
@@ -176,6 +178,7 @@ def get_args():
     return parser.parse_args()
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     args = get_args()
     dataset = args.dataset
     if dataset is None:
