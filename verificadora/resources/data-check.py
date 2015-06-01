@@ -54,9 +54,9 @@ def construct_response(function_flags):
     response_dict = {}
 
     for key in function_flags:
-        if function_flags[key]==1:
+        if function_flags[key][0]==1:
             status = "Fail"
-            reason = "Error Found"
+            reason = "Error Found in row " + str(function_flags[key][1])
         else:
             status = "Pass"
             reason = "Error Not Found"
@@ -97,19 +97,18 @@ def data_validation(data):
 
     #build function status dictionary
     for key in per_value_functions:
-        function_flags[key] = 0
-    function_flags["duplicate rows"] = 0
+        function_flags[key] = [0,0]
+    function_flags["duplicate rows"] = [0,0]
 
     row_dictionary = {}
-
+    number_row_error = 1
     for row in data:
 
         #iterate each row and build a dictionary with the tuple built from the row. If a given row is found in such dictionary: The duplicate flag is risen.
         if tuple(row) not in found:
             row_dictionary[tuple(row)] = 1
         else:
-            function_flags["duplicate rows"] = 1
-
+            function_flags["duplicate rows"] = [1,number_row_error]
         for value in row:
             #Iterate each value and run the validations that have not been found as positive. 
             if len(per_value_functions) > 0:
@@ -118,15 +117,16 @@ def data_validation(data):
                     flag = per_value_functions[function_string](value)
                     if flag == 1:
                         #If the current string was found to be positive to a validation, store the status and store it in a temporal list to remove it later (You can't change dictionaries while iterating them in python).
-                        function_flags[function_string]=1
+                        function_flags[function_string]=[1,number_row_error]
                         remove_function.append(function_string)
                 
                 #This is when the function is removed from dictionary so we don't further test such criteria
                 if len(remove_function) is not None: 
                     for function in remove_function:
                         per_value_functions.pop(function, None)
+        number_row_error = number_row_error + 1
 
-    response_dict = construct_response(function_flags)
+        response_dict = construct_response(function_flags)
 
     return response_dict
 
