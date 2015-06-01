@@ -52,10 +52,13 @@ def verify_morethan11ine(filename):
     """ 
     count = 0
     valor = 0
-    with open(filename, 'rb') as fp:
-        for line in fp:
-            count = count + 1
-            if count > 1: valor = 1
+    try:
+        with open(filename, 'rb') as fp:
+            for line in fp:
+                count = count + 1
+                if count > 1: valor = 1
+    except FileNotFoundError as e:
+        logging.error(e)
     return valor
 
 def csv_validation(filename):

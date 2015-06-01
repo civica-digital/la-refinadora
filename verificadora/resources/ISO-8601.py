@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-import json
+import argparse
 import csv
 import iso8601
-import argparse
+import json
+import logging
 
 def stringify_columns(column_list):
     """
@@ -63,9 +64,12 @@ def date_validation(data):
     return response
 
 def read_sample(dataset):
-    with open(dataset, 'r') as f:
-        reader = csv.reader(f)
-        data = list(reader)
+    try:
+        with open(dataset, 'r') as f:
+            reader = csv.reader(f)
+            data = list(reader)
+    except FileNotFoundError as e:
+        logging.error(e)
     return data
 
 def response_status(response_dict):
@@ -105,6 +109,7 @@ def get_args():
     return parser.parse_args()
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     args = get_args()
     dataset = args.dataset
     if dataset is None:
