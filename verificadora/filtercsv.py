@@ -32,21 +32,25 @@ def generate_random_filename():
 
 def generate_random_list(N,n_lines):
     r_list=[]
-    for _ in range(N):
+    Nrange = range(int(N))
+    for _ in Nrange:
         r_int =random.randint(1,n_lines)
         r_list.append(r_int)
     r_list = sorted(r_list)
+    print(r_list)
     return r_list
 
 def read_random_lines(filename, N,n_lines):
     random_list = generate_random_list(N,n_lines)
     count = 0
+    data = b""
     with open(filename,'rb') as fp:
         for line in fp:
             count = count + 1
-            if count == random_list[0]:
-                data=fp.read()
-                random_list.pop(0)
+            if len(random_list) > 0:
+                if count == random_list[0]:
+                    data=data + fp.readline()
+                    random_list.pop(0)
         fp.close()
     return data
 
@@ -155,18 +159,20 @@ def prepare_csv(csv_requirements,filename,resource,TMP_DIR):
     :param filename: resource filename.
     :return temp_data_path: returns filename of the temporary filtered file to use.
     """
-
+    requirements = csv_requirements['response']
     raw = "raw"
-    unit = "row"
+    unit = "file"
     sampling = "random"
     number_units = 0
+    print(requirements["unit"])
     try:
-        unit = csv_requirements["unit"] # rows, title, file, columns
+        unit = requirements["unit"] # rows, title, file, columns
     except:
         unit = "file"
-    if "number" in csv_requirements: number_units = int(requirements["number"]) #Un número de 1 al numero de filas o columnas 
-    if "sampling" in csv_requirements: sampling = requirements["sampling"] #random, first, last
-    if "response" in csv_requirements: requirements = csv_requirements["response"]
-    if "raw" in csv_requirements: raw = requirements["raw"]
+    if "number" in requirements: number_units = int(requirements["number"]) #Un número de 1 al numero de filas o columnas 
+    if "sampling" in requirements: sampling = requirements["sampling"] #random, first, last
+    if "raw" in requirements: raw = requirements["raw"]
+    if "response" in requirements: raw = csv_requirements["response"]
+    print(filename,raw,unit,sampling,number_units)
     temp_data_path = filter_data(filename, raw, unit, sampling, number_units,TMP_DIR)
     return temp_data_path
