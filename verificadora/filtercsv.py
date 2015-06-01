@@ -166,7 +166,6 @@ def prepare_csv(csv_requirements,filename,resource,TMP_DIR):
         unit = "file"
     if "number" in csv_requirements: number_units = int(requirements["number"]) #Un número de 1 al numero de filas o columnas 
     if "sampling" in csv_requirements: sampling = requirements["sampling"] #random, first, last
-    
     if "raw"  if "response" in csv_requirements: requirements = csv_requirements["response"]
    in csv_requirements: raw = requirements["raw"]
     temp_data_path = filter_data(filename, raw, unit, sampling, number_units,TMP_DIR)
