@@ -160,11 +160,13 @@ def prepare_csv(csv_requirements,filename,resource,TMP_DIR):
     unit = "row"
     sampling = "random"
     number_units = 0
-
-    if "response" in csv_requirements: requirements = csv_requirements["response"]
+    try:
+        unit = requirements["unit"] # rows, title, file, columns
+    except:
+        unit = "file"
     if "number" in csv_requirements: number_units = int(requirements["number"]) #Un número de 1 al numero de filas o columnas 
     if "sampling" in csv_requirements: sampling = requirements["sampling"] #random, first, last
-    if "unit" in csv_requirements: unit = requirements["unit"] # rows, title, file, columns
-    if "raw" in csv_requirements: raw = requirements["raw"]
+    if "raw"  if "response" in csv_requirements: requirements = csv_requirements["response"]
+   in csv_requirements: raw = requirements["raw"]
     temp_data_path = filter_data(filename, raw, unit, sampling, number_units,TMP_DIR)
     return temp_data_path
