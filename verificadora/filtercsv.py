@@ -161,7 +161,7 @@ def prepare_csv(csv_requirements,filename,resource,TMP_DIR):
     sampling = "random"
     number_units = 0
     try:
-        unit = requirements["unit"] # rows, title, file, columns
+        unit = csv_requirements["unit"] # rows, title, file, columns
     except:
         unit = "file"
     if "number" in csv_requirements: number_units = int(requirements["number"]) #Un número de 1 al numero de filas o columnas 
