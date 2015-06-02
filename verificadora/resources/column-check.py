@@ -96,7 +96,6 @@ def has_alphanumeric_headers(filepath):
         reader = csv.reader(f)
         headers = next(reader)
         for column_number, column_name in enumerate(headers, start=1):
-            print(regexp.search(column_name))
             if regexp.search(column_name):
                 status = "Fail"
                 reason = """Column name {column_name} in column {column_number} has an invalid name. Please use only letters, numbers, and dashes.""".format(column_name=column_name, column_number=column_number)

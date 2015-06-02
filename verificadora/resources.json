@@ -1,6 +1,8 @@
 {
   "resources": [
     "general-file-check.py",
-    "data-check.py"
+    "data-check.py",
+    "ISO-8601.py",
+    "column-check.py"
   ]
 }
