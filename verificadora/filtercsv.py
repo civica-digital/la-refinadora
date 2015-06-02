@@ -18,7 +18,6 @@ def detect_lines(filename):
 def read_top_lines(filename, N):
     with open(filename,'rb') as fp:
         head = fp.readlines(N)
-        print(head)
     return head
 
 def name_id_generator(size=24, chars=string.ascii_uppercase + string.digits):
@@ -37,7 +36,6 @@ def generate_random_list(N,n_lines):
         r_int =random.randint(1,n_lines)
         r_list.append(r_int)
     r_list = sorted(r_list)
-    print(r_list)
     return r_list
 
 def read_random_lines(filename, N,n_lines):
@@ -164,7 +162,6 @@ def prepare_csv(csv_requirements,filename,resource,TMP_DIR):
     unit = "file"
     sampling = "random"
     number_units = 0
-    print(requirements["unit"])
     try:
         unit = requirements["unit"] # rows, title, file, columns
     except:
@@ -173,6 +170,5 @@ def prepare_csv(csv_requirements,filename,resource,TMP_DIR):
     if "sampling" in requirements: sampling = requirements["sampling"] #random, first, last
     if "raw" in requirements: raw = requirements["raw"]
     if "response" in requirements: raw = csv_requirements["response"]
-    print(filename,raw,unit,sampling,number_units)
     temp_data_path = filter_data(filename, raw, unit, sampling, number_units,TMP_DIR)
     return temp_data_path

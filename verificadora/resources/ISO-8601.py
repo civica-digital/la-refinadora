@@ -47,7 +47,7 @@ def detect_columns_dates(data):
     return correct_columns_string
 
 def date_validation(data):
-        """
+    """
     Validator: Detects if the data has dates in a ISO 8601 compatible format
 
     :param data: data to work with.

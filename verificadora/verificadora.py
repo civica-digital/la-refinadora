@@ -38,9 +38,9 @@ def response_status(response_dict):
             returns "Pass" otherwise.
     """ 
 
-    status = "Fail"
+    status = "Pass"
     for response in response_dict.keys():
-        if response_dict[response]['status'] == "Pass": status = "Pass"
+        if response_dict[response]['status'] == "Fail": status = "Fail"
     return status
 
 def verify_morethan11ine(filename):
