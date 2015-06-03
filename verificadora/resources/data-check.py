@@ -18,6 +18,13 @@ def detect_white_cells(input_string):
     if input_string == "": flag = 1
     return flag
 
+def detect_calculus(input_string):
+    flag = 0
+    calculus_characters = ["+","-","=","/"]
+    for char in calculus_characters:
+        if char in input_string: flag = 1
+    return flag
+
 def detect_non_standard(input_string):
     flag = 0
     regexp = re.compile('[^A-Za-z0-9-]')
@@ -76,7 +83,8 @@ def per_value_function_dictionary():
         "special characters": detect_non_standard, 
         "file path":detect_file_path, 
         "double spaces": detect_double_spaces, 
-        "trailing and leading spaces":detect_trailing_leading_spaces 
+        "trailing and leading spaces":detect_trailing_leading_spaces,
+        "calculus":detect_calculus
         }
     return per_value_functions
 
