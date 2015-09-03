@@ -55,15 +55,15 @@ def update_status(repo, work):
     - Si el contenedor ha finalizado, pero en el esquema de la DB, actualiza `status` y `results` de la DB.
     - SI el contenedor y esquema de la DB tienen estado como finalizado no se realiza ninguna accion.
     """
-    Id = work.container["Id"]
+    Id = work["container"]
     logs = repo.logs(Id)
 
 
-    if status(repo, Id) != work.container["status"] and status(repo, id) != "UP":
-        return {
+    if status(repo, Id) != work["status"] and status(repo, id) != "UP":
+        return { "$set": {
             "status": status(repo, id),
             "results": logs
-        }
+        }}
 
     return {}
 
