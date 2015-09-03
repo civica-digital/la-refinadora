@@ -36,7 +36,9 @@ class Validador:
             ])
         }
         container = self.client.create_container(**container)
-        return Work(_id, container, self, fuente).run()
+        work = Work(_id, container, self, fuente)
+        work.run()
+        return work
 
     @property
     def name(self):
