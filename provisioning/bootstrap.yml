@@ -1,0 +1,8 @@
+- hosts: all
+  gather_facts: False
+  vars:
+    ansible_ssh_user: core
+  roles:
+    - defunctzombie.coreos-bootstrap
+  tasks:
+    - copy: src=files/pip dest=/home/core/bin/pip owner=core group=core mode=0755
