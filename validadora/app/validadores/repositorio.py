@@ -34,7 +34,7 @@ class Repositorio:
 
     def get_validador(self, validador_name):
         for validador in self.list_validadores():
-            if validador_name == validador.name or validador_name is validador:
+            if validador_name in validador.name or validador_name is validador:
                 validador.repo = self
                 return validador
 
