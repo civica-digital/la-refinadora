@@ -27,7 +27,7 @@ class Repositorio:
 
 
     def list_validadores(self):
-        return [ Validador(image) for image in self.client.images()
+        return [ Validador(image, repo=self) for image in self.client.images()
                  if is_validador_schema(schema=image)
                  and repo_origin(self.name, image["RepoTags"])]
 

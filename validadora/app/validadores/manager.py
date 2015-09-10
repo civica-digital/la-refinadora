@@ -10,6 +10,7 @@ from repositorio import Repositorio
 from utils import make_id, update_status
 
 import time
+import json
 
 class Manager:
 
@@ -21,7 +22,7 @@ class Manager:
         self.repo = repositorio
 
         self.queue = Queue()
-        self.db = MongoClient('172.17.0.61', 27017)
+        self.db = MongoClient('172.17.0.2', 27017)
 
         self.w = Thread(target=self.control)
         self.w.daemon = True
@@ -65,7 +66,7 @@ class Manager:
         validador = self.repo.get_validador(validador)
         work_id = make_id()
         self.queue.put([work_id, validador, dataset])
-        return work_id
+        return {"id_work":work_id}
 
 
     def dcat_work(self, dcat):
@@ -77,7 +78,7 @@ class Manager:
         if work['status'] == 'Up':
             return "Aún procesando"
         else:
-            return work['result']
+            return json.loads(work['results'])
 
 if __name__ == "__main__":
     m = Manager()

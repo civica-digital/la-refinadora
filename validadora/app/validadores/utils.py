@@ -59,20 +59,25 @@ def update_status(repo, work):
     logs = repo.logs(Id)
 
 
-    if status(repo, Id) != work["status"] and status(repo, id) != "UP":
+    if status(repo, Id) != work["status"] or work["status"] == "UP":
         return { "$set": {
-            "status": status(repo, id),
+            "status": status(repo, Id),
             "results": logs
         }}
 
     return {}
 
 
-def status(repo, id):
+def status(repo, _id):
     """
     Devuelve el status del contenedor.
     """
-    return "Up"
+
+    i = repo.inspect_container(_id)["State"]["Running"]
+    if i:
+        return "Up"
+    else:
+        return "Down"
 
 
 def repo_origin(origin, names):

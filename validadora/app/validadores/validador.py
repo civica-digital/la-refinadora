@@ -12,12 +12,14 @@ class Validador:
     """
     Los validadores deben de incluir su propio id y no pasarlo como parametro.
     """
-    def __init__(self, schema):
+    def __init__(self, schema, repo=None):
         """
         Los validadores son construidos por el Repositorio.
 
         El parametro schema es la misma sintaxis que una imagen de docker.
         """
+
+        self.repo = repo
         if is_validador_schema(schema):
             self.schema = schema.copy()
         else:
@@ -27,7 +29,7 @@ class Validador:
 
     def run(self, _id, fuente):
         container = {
-            'image': repo_origin(self.repo.name, self.name),
+            'image':  self.name,
             'name': _id,
             'volumes': '/datasets/{}'.format(_id),
             'command': '/datasets/{}'.format(_id),
@@ -42,7 +44,7 @@ class Validador:
 
     @property
     def name(self):
-        return self.schema["RepoTags"]
+        return repo_origin(self.repo.name, self.schema["RepoTags"])
 
 
 if __name__ == "__main__":
