@@ -11,7 +11,7 @@ from . import views
 
 def run():
     import os
-    port = os.getenv('REFINADORA_PORT', 5000)
+    port = int(os.getenv('REFINADORA_PORT', 5000))
     host = os.getenv('REFINADORA_HOST', '127.0.0.1')
 
     app.run(host, port, debug=True)
