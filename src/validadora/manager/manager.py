@@ -4,13 +4,14 @@ from docker import Client
 from pymongo import MongoClient
 from datetime import datetime
 from threading import Thread
-from Queue import Queue
+from queue import Queue
 
-from repositorio import Repositorio
-from utils import make_id, update_status
+from .repositorio import Repositorio
+from .utils import make_id, update_status
 
 import time
 import json
+import os
 
 class Manager:
 
@@ -22,7 +23,7 @@ class Manager:
         self.repo = repositorio
 
         self.queue = Queue()
-        self.db = MongoClient('172.17.0.2', 27017)
+        self.db = MongoClient(os.environ['MONGO_PORT_27017_TCP_ADDR'], int(os.environ["MONGO_PORT_27017_TCP_PORT"]))
 
         self.w = Thread(target=self.control)
         self.w.daemon = True
@@ -78,13 +79,15 @@ class Manager:
         if work['status'] == 'Up':
             return "Aún procesando"
         else:
-            return json.loads(work['results'])
+            result = work['results'].decode("utf-8")
+            print(result)
+            return json.loads(result)
 
 if __name__ == "__main__":
     m = Manager()
     dataset = "http://datos.labcd.mx/dataset/3968a764-f85a-4b7c-903b-bd3e3e23fd78/resource/1f2b8d6b-c93a-4f63-b6c3-90293a91726b/download/embajadas.csv"
 
-    m.new_work("validadora/iso8601:latest", dataset)
+    m.new_work("src/iso8601:latest", dataset)
     import time
     while True:
         time.sleep(10)

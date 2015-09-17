@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from recolector import write_to
+from .recolector import write_to
 
 class Work:
     """
-    Un work es la unidad de procesamiento en la validadora
+    Un work es la unidad de procesamiento en la src
 
     - [ ] Cada work mantiene un estado, pudiendo ser:
         * ready
@@ -25,7 +25,7 @@ class Work:
 
 
     def run(self):
-        write_to('/tmp/{}'.format(self.id), self.fuente)
+        write_to('/datasets/{}'.format(self.id), self.fuente)
         response = self.validador.client.start(self.container.get('Id'))
         return response
 

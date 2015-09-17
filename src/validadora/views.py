@@ -1,9 +1,7 @@
-from app import app
+from . import app
 from flask import jsonify, request, render_template, url_for
 from .forms import ValidateForm
-# from repositorio import repositorios
-from validator import validate_catalog
-from validadores.manager import Manager
+from validadora.manager.manager import Manager
 
 REPOSITORIOS = ['i11', 'i12', 'i13', 'i14', 'u21', 'm31', 'm32', 'm33', 'c41', 'c42', 'c43', 'c44', 'c45', 'c46', 'n51', 'n52', 'l01', 'd01']
 

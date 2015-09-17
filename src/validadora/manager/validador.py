@@ -1,5 +1,5 @@
-from utils import is_validador_schema, repo_origin
-from work import Work
+from .utils import is_validador_schema, repo_origin
+from .work import Work
 
 import docker
 
@@ -10,11 +10,11 @@ class ValidadorSchemaInvalid(Exception):
 
 class Validador:
     """
-    Los validadores deben de incluir su propio id y no pasarlo como parametro.
+    Los manager deben de incluir su propio id y no pasarlo como parametro.
     """
     def __init__(self, schema, repo=None):
         """
-        Los validadores son construidos por el Repositorio.
+        Los manager son construidos por el Repositorio.
 
         El parametro schema es la misma sintaxis que una imagen de docker.
         """
@@ -54,7 +54,7 @@ if __name__ == "__main__":
                'Labels': {},
                'VirtualSize': 795865269,
                'ParentId': '9cce8d0ab3ceadd880b97330a259d362e51e303089fc096db5094f2642585bee',
-               'RepoTags': ['iso8601:latest', 'validadora/iso8601:latest'],
+               'RepoTags': ['iso8601:latest', 'src/iso8601:latest'],
                'RepoDigests': [],
                'Id': '15ef989c576bdc0ae8ed721f9c58a850ee050620ed8e9d816dacaffdb050e497',
                'Size': 0
@@ -66,6 +66,6 @@ if __name__ == "__main__":
     val = Validador(esquema)
     val.client = c
     val.repo =tmp()
-    val.repo.name = "validadora"
+    val.repo.name = "src"
     dataset = "http://datos.labcd.mx/dataset/3968a764-f85a-4b7c-903b-bd3e3e23fd78/resource/1f2b8d6b-c93a-4f63-b6c3-90293a91726b/download/embajadas.csv"
     val.run(make_id(), dataset)

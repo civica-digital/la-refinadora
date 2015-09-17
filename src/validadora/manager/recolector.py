@@ -12,7 +12,7 @@ def fetch_data(source, params={"stream": True}):
 
 def write_to(path, resource):
     with open(path, "w") as f:
-        f.write(fetch_data(resource).content)
+        f.write(str(fetch_data(resource).content))
 
 
 if __name__ == "__main__":
@@ -31,6 +31,6 @@ if __name__ == "__main__":
     import os
 
     if os.path.exists(destino) and os.path.isfile(destino):
-        print "Datos transferidos"
+        print("Datos transferidos")
         for k, v in ciclovias.headers.items():
             print("{0}: {1}".format(k, v))
