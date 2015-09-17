@@ -81,7 +81,12 @@ class Manager:
         else:
             result = work['results'].decode("utf-8")
             print(result)
-            return json.loads(result)
+            try:
+                res = json.loads(result)
+            except:
+                res = {'error': 'validador', 'msg': result}
+
+            return res # TODO: Mejorar el manejo de error de los validadores
 
 if __name__ == "__main__":
     m = Manager()
