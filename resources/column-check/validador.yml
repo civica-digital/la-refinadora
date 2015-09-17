@@ -1,0 +1,14 @@
+---
+validator: column-check
+section: u19
+maintainer:
+  - Miguel Salazar
+  - Ricardo Alanis
+
+docker:
+  source: Dockerfile
+  entrypoint:
+    - cmd: python column-check.py
+    - arguments:
+      - key: "--datasets"
+        type: path
