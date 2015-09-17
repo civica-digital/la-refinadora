@@ -34,7 +34,7 @@ class Validador:
             'volumes': '/datasets/{}'.format(_id),
             'command': '/datasets/{}'.format(_id),
             'host_config': docker.utils.create_host_config(binds=[
-              '/tmp/{}:/datasets/{}'.format(_id,_id),
+              '/tmp/{}.csv:/datasets/{}.csv'.format(_id,_id), # TODO: Detect format
             ])
         }
         container = self.client.create_container(**container)

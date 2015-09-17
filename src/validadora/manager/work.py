@@ -25,7 +25,7 @@ class Work:
 
 
     def run(self):
-        write_to('/datasets/{}'.format(self.id), self.fuente)
+        write_to('/datasets/{}.csv'.format(self.id), self.fuente)
         response = self.validador.client.start(self.container.get('Id'))
         return response
 
