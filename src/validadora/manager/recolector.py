@@ -12,7 +12,7 @@ def fetch_data(source, params={"stream": True}):
 
 def write_to(path, resource):
     with open(path, "w") as f:
-        f.write(str(fetch_data(resource).content))
+        f.write(fetch_data(resource).content.decode("utf-8"))
 
 
 if __name__ == "__main__":
