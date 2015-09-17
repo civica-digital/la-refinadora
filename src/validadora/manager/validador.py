@@ -31,8 +31,7 @@ class Validador:
         container = {
             'image':  self.name,
             'name': _id,
-            'volumes': '/datasets/{}'.format(_id),
-            'command': '/datasets/{}'.format(_id),
+            'command': '/datasets/{}.csv'.format(_id),
             'host_config': docker.utils.create_host_config(binds=[
               '/tmp/{}.csv:/datasets/{}.csv'.format(_id,_id), # TODO: Detect format
             ])
