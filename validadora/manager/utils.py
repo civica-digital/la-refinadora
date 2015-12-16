@@ -2,6 +2,8 @@
 
 from datetime import datetime
 import random
+import requests
+import json
 
 """
 {
@@ -86,5 +88,5 @@ def repo_origin(origin, names):
             return  name
     return False
 
-def notify_work(data):
-    pass
+def notify_work(url, res):
+    requests.post(url, data=json.dumps(res))

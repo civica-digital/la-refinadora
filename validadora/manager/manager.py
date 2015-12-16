@@ -55,10 +55,6 @@ class Manager:
 
             if len(args) == 1:
                 data['callback'] = args[1]
-                try:
-                    notify_work(data)
-                except:
-                    pass
 
             collection.insert(data)
 
@@ -71,6 +67,11 @@ class Manager:
                 update = update_status(self.client, work)
                 if update != {}:
                     self.db.validadora.works.find_one_and_update({'_id': work["_id"]}, update)
+                if update.get('status') == 'Down':
+                  try:
+                    notify_work(work['callback'], update['results'])
+                  except:
+                    pass
             time.sleep(10)
 
 
@@ -97,6 +98,10 @@ class Manager:
             print(result)
             try:
                 res = json.loads(result)
+                try:
+                    notify_work()
+                except:
+                    pass
             except:
                 res = {'error': 'validador', 'msg': result}
 
