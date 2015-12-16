@@ -85,3 +85,6 @@ def repo_origin(origin, names):
         if name.split('/')[0] == origin:
             return  name
     return False
+
+def notify_work(data):
+    pass

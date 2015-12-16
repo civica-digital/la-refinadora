@@ -7,7 +7,7 @@ from threading import Thread
 from queue import Queue
 
 from .repositorio import Repositorio
-from .utils import make_id, update_status
+from .utils import make_id, update_status, notify_work
 
 import time
 import json
@@ -38,11 +38,12 @@ class Manager:
         while True:
             db = self.db.validadora
             collection = db.works
-            (work_id, validador, fuente) = self.queue.get()
+            (work_id, validador, fuente, *args) = self.queue.get()
             validador.client = self.client
             work = validador.run(work_id, fuente)
             print(dir(collection))
-            collection.insert({
+
+            data = {
                 'work_id': work_id,
                 'fuente': fuente,
                 'validador': validador.name,
@@ -50,7 +51,17 @@ class Manager:
                 'date': datetime.utcnow(),
                 'status': 'UP',
                 'result': ""
-            })
+            }
+
+            if len(args) == 1:
+                data['callback'] = args[1]
+                try:
+                    notify_work(data)
+                except:
+                    pass
+
+            collection.insert(data)
+
 
 
     def monitor(self):
@@ -63,10 +74,13 @@ class Manager:
             time.sleep(10)
 
 
-    def new_work(self, validador, dataset):
+    def new_work(self, validador, dataset, callback=False):
         validador = self.repo.get_validador(validador)
         work_id = make_id()
-        self.queue.put([work_id, validador, dataset])
+        work = [work_id, validador, dataset]
+        if callback:
+            work.append(callback)
+        self.queue.put(work)
         return {"id_work":work_id}
 
 
