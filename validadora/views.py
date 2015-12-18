@@ -2,7 +2,6 @@ from flask import jsonify, request, render_template, url_for, Blueprint
 from flask.ext.login import current_user, login_required
 from validadora.forms import ValidateForm
 from validadora.manager.manager import Manager
-from validadora.models.users import User
 from uuid import uuid4
 
 REPOSITORIOS = ['i11', 'i12', 'i13', 'i14', 'u21', 'm31', 'm32', 'm33', 'c41', 'c42', 'c43', 'c44', 'c45', 'c46', 'n51', 'n52', 'l01', 'd01']
@@ -37,6 +36,8 @@ def validate():
     resp = {}
     print(request.form.values())
     print(validators)
+
+    callback = False
     if 'validation' in request.form.keys() and 'dcat_url' in request.form.keys():
         validation = request.form['validation']
         dcat_url = request.form['dcat_url']
@@ -44,7 +45,10 @@ def validate():
             return jsonify({ "Error": "Validator not found."})
         if dcat_url != "": # TODO: Fix this later
             resp = jsonify({ "Error": "URL not valid."})
-        resp = _M.new_work(validation, dcat_url)
+        if 'callback' in request.form.keys():
+            callback = request.form['callback']
+        work = _M.new_work(validation, dcat_url, callback)
+        resp = {'id': work.wid }
     else:
         resp = { "Error": "Missing arguments. "}
     return jsonify(resp)

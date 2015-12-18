@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from .recolector import write_to
+from validadora.proxy import Proxy as proxy
+import docker
 
 class Work:
     """
@@ -17,16 +19,34 @@ class Work:
              - refleja sus estado en la base de datos.
 
     """
-    def __init__(self, _id, container, validador, fuente):
-        self.id =_id
-        self.container = container
-        self.validador = validador
-        self.fuente = fuente
+    def __init__(self, work):
+        self.work = work
 
 
     def run(self):
-        write_to('/datasets/{}.csv'.format(self.id), self.fuente)
-        response = self.validador.client.start(self.container.get('Id'))
+        validator = proxy.repo.get_validador(self.work.validador)
+        print("validador {}".format(validator))
+        container_config = {
+            'image':  self.work.validador,
+            'name': self.work.wid,
+            'command': '/datasets/{}.csv'.format(self.work.wid),
+            'host_config': docker.utils.create_host_config(binds=[
+              '/tmp/{}.csv:/datasets/{}.csv'.format(self.work.wid, self.work.wid), # TODO: Detect format
+            ])
+        }
+
+        container = validator.client.create_container(**container_config)
+        self.work.container = container.get('Id')
+
+        self.work.status='UP'
+
+        self.work.save()
+
+
+        write_to('/datasets/{}.csv'.format(self.work.wid), self.work.fuente)
+
+
+        response = validator.client.start(self.work.container)
         return response
 
 

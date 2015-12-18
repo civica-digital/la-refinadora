@@ -1,29 +1,31 @@
 # -*- coding: utf-8 -*-
 
 from docker import Client
-from pymongo import MongoClient
 from datetime import datetime
 from threading import Thread
 from queue import Queue
 
 from .repositorio import Repositorio
 from .utils import make_id, update_status, notify_work
+from .work import  Work as Worker
+from validadora.models.work import Work
+import json, os, time
 
-import time
-import json
-import os
+
+from validadora.proxy import Proxy as proxy
 
 class Manager:
 
     def __init__(self, repositorio=None):
+        self.works = {}
+
         if not repositorio:
             self.client = Client("unix:///var/run/docker.sock")
             repositorio = Repositorio(self.client)
 
-        self.repo = repositorio
+        self.repo = proxy.repo = repositorio
 
         self.queue = Queue()
-        self.db = MongoClient(os.environ['MONGO_PORT_27017_TCP_ADDR'], int(os.environ["MONGO_PORT_27017_TCP_PORT"]))
 
         self.w = Thread(target=self.control)
         self.w.daemon = True
@@ -36,53 +38,45 @@ class Manager:
 
     def control(self):
         while True:
-            db = self.db.validadora
-            collection = db.works
-            (work_id, validador, fuente, *args) = self.queue.get()
-            validador.client = self.client
-            work = validador.run(work_id, fuente)
-            print(dir(collection))
-
-            data = {
-                'work_id': work_id,
-                'fuente': fuente,
-                'validador': validador.name,
-                'container': work.container.get('Id'),
-                'date': datetime.utcnow(),
-                'status': 'UP',
-                'result': ""
-            }
-
-            if len(args) == 1:
-                data['callback'] = args[1]
-
-            collection.insert(data)
-
+            work = self.queue.get()
+            worker = Worker(work)
+            worker.run() # call container
 
 
     def monitor(self):
         while True:
-            works = self.db.validadora.works
-            for work in works.find():
-                update = update_status(self.client, work)
-                if update != {}:
-                    self.db.validadora.works.find_one_and_update({'_id': work["_id"]}, update)
-                if update.get('status') == 'Down':
-                  try:
-                    notify_work(work['callback'], update['results'])
-                  except:
-                    pass
+
+            for work in Work.objects(status__in=["Waiting", "UP", "Down"]):
+                print("actualizado works {} ".format(work.wid))
+                if work.status == 'Down':
+                    if work.callback:
+                        try:
+                           notify_work(work.callback, work.results)
+                        except:
+                            next
+                    work.status = "Finished"
+                    work.save()
+                else:
+                    if work.container:
+                        update = update_status(self.client, work)
+
+
+
             time.sleep(10)
 
 
     def new_work(self, validador, dataset, callback=False):
-        validador = self.repo.get_validador(validador)
         work_id = make_id()
-        work = [work_id, validador, dataset]
+
+        w = Work(wid=work_id, validador=validador, fuente=dataset, date=datetime.utcnow(), status="Waiting")
+
         if callback:
-            work.append(callback)
-        self.queue.put(work)
-        return {"id_work":work_id}
+            w.callback = callback
+        w.save()
+        self.queue.put(w)
+
+
+        return w
 
 
     def dcat_work(self, dcat):
@@ -90,18 +84,17 @@ class Manager:
 
 
     def report_work(self, work):
-        work = self.db.validadora.works.find_one({'work_id': work})
-        if work['status'] == 'Up':
+        work = Work.objects(wid=work).first()
+        print(work.results)
+        if work.status == 'Waiting':
+            return "En cola de trabajo"
+        elif work.status == 'Up':
             return "Aún procesando"
         else:
-            result = work['results'].decode("utf-8")
+            result = work.results
             print(result)
             try:
                 res = json.loads(result)
-                try:
-                    notify_work()
-                except:
-                    pass
             except:
                 res = {'error': 'validador', 'msg': result}
 
