@@ -40,8 +40,7 @@ def validate():
     if 'validation' in request.form.keys() and 'dcat_url' in request.form.keys():
         validation = request.form['validation']
         dcat_url = request.form['dcat_url']
-        as_dcat = request.form['as_dcat']
-        callback = request.form['callback_url']
+        callback = False
 
         if validation not in [v.name for v in validators]:  # REPOSITORIOS:
             return jsonify({"Error": "Validator not found."})
@@ -49,10 +48,10 @@ def validate():
         if dcat_url == "":  # TODO: Fix this later
             return jsonify({"Error": "URL not valid."})
 
-        if callback:
+        if 'callback_url' in request.form.keys():
             callback = request.form['callback_url']
 
-        if as_dcat:
+        if 'as_dcat' in request.form.keys():
             work = _M.dcat_work([validation], dcat_url, callback)
         else:
             work = _M.new_work([validation], dcat_url, callback)
