@@ -18,13 +18,13 @@ var app = new Vue({
     },
     methods: {
       validateDataset: function () {
-          if(this[field].url == "") {
+          if(this.dataset.url == "") {
                 var msg = "Este campo no debe estar vacio";
-                this[field].valid = false;
+                this.dataset.valid = false;
 
 
-                if (-1 == this[field].reasons.indexOf(msg)) {
-                    this[field].reasons.push(msg);
+                if (-1 == this.dataset.reasons.indexOf(msg)) {
+                    this.dataset.reasons.push(msg);
                 }
                 notificationCenter.error(msg, 8000);
 

@@ -6,7 +6,7 @@ from threading import Thread
 from queue import Queue
 
 from .repositorio import Repositorio
-from .utils import make_id, update_status, notify_work
+from .utils import make_id, update_status, notify_work, notify_dcat, get_datasets_from_dcat
 from .work import  Work as Worker
 from validadora.models.work import Work
 import json, os, time
@@ -48,12 +48,35 @@ class Manager:
 
             for work in Work.objects(status__in=["Waiting", "Created","Up", "Down"]):
                 print("actualizado works {} ".format(work.wid))
+                if work.type and work.type["dcat"] == "owner":
+                    try:
+                        if work.type["counter"] == 0:
+                            try:
+                              notify_dcat(work.callback, work.wid)
+                            except:
+                                pass
+
+                            work.status = "Finished"
+                            work.save()
+                        else:
+                            next
+                    except:
+                        pass
+
                 if work.status == 'Down':
                     if work.callback:
                         try:
                             notify_work(work.callback, work.results)
                         except:
                             next
+                    if work.type and work.type["dcat"]=='member':
+                        parent = Work.objects(wid=work.type["owner"]).first()
+                        try:
+                            parent.type["counter"] -= 1
+                        except:
+                            pass
+
+                        parent.save()
                     work.status = "Finished"
                     work.save()
                 else:
@@ -65,22 +88,51 @@ class Manager:
             time.sleep(10)
 
 
-    def new_work(self, validador, dataset, callback=False):
+    def new_work(self, validadors, dataset, callback=False, owner=False):
+        work_id = make_id()
+        for validador in validadors:
+            w = Work(wid=work_id, validador=validador, fuente=dataset, date=datetime.utcnow(), status="Waiting")
+
+            if callback:
+                w.callback = callback
+
+            if owner:
+                w.type["dcat"] = 'member'
+                w.type["owner"] = owner
+
+            w.save()
+            self.queue.put(w)
+
+
+        return work_id
+
+
+    def dcat_work(self, validadors, dataset, callback=False):
+        childrens = []
         work_id = make_id()
 
-        w = Work(wid=work_id, validador=validador, fuente=dataset, date=datetime.utcnow(), status="Waiting")
+        w = Work(wid=work_id, validador=str(validadors), fuente=dataset, date=datetime.now(), status="Up",
+                 type={
+                     "dcat": "owner",
+                 })
 
         if callback:
             w.callback = callback
+
+        datasets = get_datasets_from_dcat(dataset)
+        if not datasets:
+            return None
+
+        for dataset in datasets:
+            id = self.new_work(validadors, dataset, owner=work_id)
+            childrens = [id] + childrens
+
+        w.childrens = childrens
+        w.type["counter"] = len(childrens)
         w.save()
-        self.queue.put(w)
 
+        return work_id
 
-        return w
-
-
-    def dcat_work(self, dcat):
-        pass
 
 
     def report_work(self, work):

@@ -98,3 +98,23 @@ def repo_origin(origin, names):
 
 def notify_work(url, res):
     requests.post(url, json=json.dumps(res))
+
+def notify_dcat(url, id):
+    pass
+
+def get_datasets_from_dcat(dcat):
+    data = requests.get(dcat)
+    if data.status_code < 300:
+        try:
+            jdcat = json.loads(data.text)
+        except:
+            return []
+        if 'dataset' in jdcat.keys():
+            datasets = []
+            for element in jdcat["dataset"]:
+                for entry in element['distribution']:
+                    print(entry.keys())
+                    datasets.append(entry["downloadURL"])
+            return datasets
+
+    return []

@@ -25,11 +25,15 @@
               %label for="{{ validador.name}}"
                 = validador.name
         .row
-        .send.col.s12.m12
-        %button.btn.waves_effect.waves-light  type="submit" name="dcat_url"
-          Validar
-          %i.material-icons.right
-            send
+        .send.col.s8.m8
+          %button.btn.waves_effect.waves-light  type="submit" name="dcat_url"
+            Validar
+            %i.material-icons.right
+              send
+        .dcat.col.s4.m4
+          =form.as_dcat(class=".right-align")
+          %label for="as_dcat"
+            Tratar url como dcat
 
 
 -block assets

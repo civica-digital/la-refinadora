@@ -26,3 +26,5 @@ class Work(db.Document):
     results = db.StringField()
     container = db.StringField()
     callback = db.URLField()
+    type = db.DictField()
+    childrens = db.ListField()

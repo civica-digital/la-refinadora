@@ -2,7 +2,7 @@ from flask.ext.wtf import Form
 from flask.ext.wtf.html5 import URLField
 from wtforms.widgets import TextInput
 from wtforms.validators import DataRequired
-from wtforms import StringField
+from wtforms import StringField, BooleanField
 
 class VueTextInput(TextInput):
   def __call__(self, field, **kwargs):
@@ -21,3 +21,4 @@ class VueTextInput(TextInput):
 class ValidateForm(Form):
   dcat_url = StringField('dcat_url', validators=[DataRequired()], widget=VueTextInput())
   callback_url = StringField('callback_url', widget=VueTextInput())
+  as_dcat = BooleanField('callback_url')
