@@ -1,0 +1,32 @@
+-extends "base.html"
+-block content
+  .container#app
+    .row
+      %h1.col.s10
+        Validadora
+        %small
+          &nbsp; de conjuntos de datos abiertos
+    .row
+      %form action="/validate" method="post" name="validate" v-on:submit.prevent="onSubmit"
+        =form.hidden_tag()
+        %label.col.s12.m8
+          URL del catálogo de datos:
+        =form.dcat_url(size=80, v_model='dataset.url', v_bind_class="{'invalid': !dataset.valid}", v_on_keyup_enter_stop_prevent="validateDataset")
+        .validadores.col.s12.m10
+          %h4 Validadores
+          -for validador in validators
+            %p.col.s12.m4
+              %input.with-gap type=checkbox name="validation" value="{{ validador.name }}" id="{{ validador.name }}" v-model="validators.list"
+              %label for="{{ validador.name}}"
+                = validador.name
+        .row
+        .send.col.s12.m12
+        %button.btn.waves_effect.waves-light  type="submit" name="dcat_url"
+          Validar
+          %i.material-icons.right
+            send
+
+
+-block assets
+  =super()
+  %script src="{{url_for('static', filename='javascript/index.js')}}" type="text/javascript"

@@ -25,3 +25,4 @@ WTForms==2.0.2
 flask-login
 flask-mongoengine
 pykka
+Hamlish-Jinja

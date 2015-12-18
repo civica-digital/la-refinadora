@@ -20,7 +20,7 @@ def index():
     form = ValidateForm()
     if form.validate_on_submit():
         return redirect('/validate')
-    return render_template("index.html", form=form, validators=validators)
+    return render_template("index.html.haml", form=form, validators=validators)
 
 @validations.route('/validate', methods=['POST'])
 def validate():

@@ -1,4 +1,5 @@
 from flask import Flask
+from hamlish_jinja import HamlishExtension
 import sys
 import os
 
@@ -10,6 +11,10 @@ def run():
     host = os.getenv('REFINADORA_HOST', '127.0.0.1')
 
     app = Flask(__name__)
+
+    app.jinja_env.add_extension(HamlishExtension)
+    app.jinja_env.hamlish_enable_div_shortcut=True
+
     try:
         app.config.from_envvar('VALIDADORA_SETTINGS')
     except:
