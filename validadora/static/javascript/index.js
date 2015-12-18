@@ -6,6 +6,11 @@ var app = new Vue({
           valid: true,
           reasons: []
       },
+      callback: {
+          url: "",
+          valid: true,
+          reasons: []
+      },
       validators: {
           list: [],
           reasons: []
@@ -13,15 +18,13 @@ var app = new Vue({
     },
     methods: {
       validateDataset: function () {
-            var status = true;
-
-            if(this.dataset.url == "") {
+          if(this[field].url == "") {
                 var msg = "Este campo no debe estar vacio";
-                this.dataset.valid = false;
+                this[field].valid = false;
 
 
-                if (-1 == this.dataset.reasons.indexOf(msg)) {
-                    this.dataset.reasons.push(msg);
+                if (-1 == this[field].reasons.indexOf(msg)) {
+                    this[field].reasons.push(msg);
                 }
                 notificationCenter.error(msg, 8000);
 
@@ -30,21 +33,29 @@ var app = new Vue({
                 notificationCenter.remove("Este campo no debe estar vacio");
             }
 
-            if(!isUrlValid(this.dataset.url)) {
+        return this.validateFieldURL("dataset");
+      },
+      validateCallback: function(){
+          return this.validateFieldURL("callback");
+      },
+      validateFieldURL:    function (field) {
+            var status = true;
+
+            if(!isUrlValid(this[field].url)) {
               var msg = "Debe contener una url valida";
-              this.dataset.valid = false;
-              if (-1 == this.dataset.reasons.indexOf(msg)) {
-                  this.dataset.reasons.push("Debe contener una url valida");
+              this[field].valid = false;
+              if (-1 == this[field].reasons.indexOf(msg)) {
+                  this[field].reasons.push(msg);
               }
-              notificationCenter.error("Debe contener una url valida", 8000);
+              notificationCenter.error(msg, 8000);
               status = false;
             } else {
-                notificationCenter.remove("Debe contener una url valida");
+                notificationCenter.remove(msg);
             }
 
             if (status) {
-                this.dataset.valid = true;
-                this.dataset.reasons = [];
+                this[field].valid = true;
+                this[field].reasons = [];
             }
 
             return status;
@@ -54,7 +65,7 @@ var app = new Vue({
 
           if(this.validators.list.length == 0) {
               var msg = "Debes seleccionar al menos un validador";
-              if (-1 == this.dataset.reasons.indexOf(msg)) {
+              if (-1 == this.validators.reasons.indexOf(msg)) {
                   this.validators.reasons.push(msg)
               }
               notificationCenter.error(msg, 8000);

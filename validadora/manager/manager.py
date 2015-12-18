@@ -46,12 +46,12 @@ class Manager:
     def monitor(self):
         while True:
 
-            for work in Work.objects(status__in=["Waiting", "UP", "Down"]):
+            for work in Work.objects(status__in=["Waiting", "Created","Up", "Down"]):
                 print("actualizado works {} ".format(work.wid))
                 if work.status == 'Down':
                     if work.callback:
                         try:
-                           notify_work(work.callback, work.results)
+                            notify_work(work.callback, work.results)
                         except:
                             next
                     work.status = "Finished"

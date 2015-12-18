@@ -9,9 +9,14 @@
     .row
       %form action="/validate" method="post" name="validate" v-on:submit.prevent="onSubmit"
         =form.hidden_tag()
-        %label.col.s12.m8
-          URL del catálogo de datos:
-        =form.dcat_url(size=80, v_model='dataset.url', v_bind_class="{'invalid': !dataset.valid}", v_on_keyup_enter_stop_prevent="validateDataset")
+        .dataset
+          %label.col.s12.m8
+            URL del catálogo de datos:
+          =form.dcat_url(size=80, v_model='dataset.url', v_bind_class="{'invalid': !dataset.valid}", v_on_keyup_enter_stop_prevent="validateDataset")
+        .callback
+          %label.col.s12.m8
+            URL de recepción
+          =form.callback_url(size=80, v_model='callback.url', v_bind_class="{'invalid': !callback.valid }")
         .validadores.col.s12.m10
           %h4 Validadores
           -for validador in validators

@@ -3,6 +3,7 @@ from flask.ext.login import current_user, login_required
 from validadora.forms import ValidateForm
 from validadora.manager.manager import Manager
 from uuid import uuid4
+import json
 
 REPOSITORIOS = ['i11', 'i12', 'i13', 'i14', 'u21', 'm31', 'm32', 'm33', 'c41', 'c42', 'c43', 'c44', 'c45', 'c46', 'n51', 'n52', 'l01', 'd01']
 
@@ -34,8 +35,6 @@ def validate():
 	The id of the validation task id
     """
     resp = {}
-    print(request.form.values())
-    print(validators)
 
     callback = False
     if 'validation' in request.form.keys() and 'dcat_url' in request.form.keys():
@@ -45,8 +44,10 @@ def validate():
             return jsonify({ "Error": "Validator not found."})
         if dcat_url != "": # TODO: Fix this later
             resp = jsonify({ "Error": "URL not valid."})
-        if 'callback' in request.form.keys():
-            callback = request.form['callback']
+
+        callback = request.form['callback_url']
+        if callback:
+            callback = request.form['callback_url']
         work = _M.new_work(validation, dcat_url, callback)
         resp = {'id': work.wid }
     else:
@@ -68,7 +69,7 @@ def get_task(task_id):
     # Get response from validator
     return jsonify({ "id_work": task_status })
 
-@validations.route('/validators/', methods=['GET'])
+@validations.route('/validators', methods=['GET'])
 def get_validators():
     """
 	Gets the list of possible validations.
@@ -118,3 +119,9 @@ def regenerate_token():
     current_user.api_key = uuid4().hex
     current_user.save()
     return jsonify({'api_key': current_user.api_key})
+
+
+@validations.route('/echo', methods=['POST'])
+def echo():
+    print(json.loads(request.data.decode('UTF-8')))
+    return 'OK'

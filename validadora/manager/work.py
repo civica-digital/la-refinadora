@@ -38,7 +38,7 @@ class Work:
         container = validator.client.create_container(**container_config)
         self.work.container = container.get('Id')
 
-        self.work.status='UP'
+        self.work.status='Up'
 
         self.work.save()
 

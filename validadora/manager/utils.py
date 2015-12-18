@@ -57,13 +57,17 @@ def update_status(repo, work):
     - Si el contenedor ha finalizado, pero en el esquema de la DB, actualiza `status` y `results` de la DB.
     - SI el contenedor y esquema de la DB tienen estado como finalizado no se realiza ninguna accion.
     """
+    if not work.container:
+        return {}
+
     Id = work.container
     logs = repo.logs(Id).decode('UTF-8')
     print(logs)
 
-    if status(repo, Id) != work.status or work.status == "UP":
+    if status(repo, Id) != work.status or work.status == "Up":
         work.status = status(repo, Id)
-        work.results = logs
+        if not work.status is "Created":
+            work.results = logs
         work.save()
 
         return work
@@ -76,11 +80,14 @@ def status(repo, _id):
     Devuelve el status del contenedor.
     """
 
-    i = repo.inspect_container(_id)["State"]["Running"]
-    if i:
+    i = repo.inspect_container(_id)["State"]["Status"]
+    if i == "running":
         return "Up"
-    else:
+    if i == "exited":
         return "Down"
+    if i == "created":
+        return "Created"
+    return i
 
 
 def repo_origin(origin, names):
@@ -90,4 +97,4 @@ def repo_origin(origin, names):
     return False
 
 def notify_work(url, res):
-    requests.post(url, data=json.dumps(res))
+    requests.post(url, json=json.dumps(res))

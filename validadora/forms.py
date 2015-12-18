@@ -20,3 +20,4 @@ class VueTextInput(TextInput):
 
 class ValidateForm(Form):
   dcat_url = StringField('dcat_url', validators=[DataRequired()], widget=VueTextInput())
+  callback_url = StringField('callback_url', widget=VueTextInput())
