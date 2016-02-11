@@ -1,13 +1,27 @@
-FROM alpine:latest
+# mxabierto validadora
+# Engine que corre una serie de validaciones sobre un dataset
+# Build:
+#   docker build -t mxabierto/validadora .
+# Usage:
+#   docker run --rm -it mxabierto/validadora
+
+# Base image
+FROM mxabierto/python3
+
 MAINTAINER "Miguel Angel Gordian"
 
-RUN apk add --update build-base python3 python3-dev
-
-WORKDIR /validadora
 ADD . /validadora
 
-RUN pip3 install -r requirements.txt && python3 setup.py install
+WORKDIR /validadora
 
-RUN apk del build-base python-dev  && rm -rf /var/cache/apk/*
+RUN \
+  apk-install \
+    build-base \
+    python3-dev && \
+  pip install -r requirements.txt && \
+  python3 setup.py install && \
+  apk del \
+    build-base
+    python3-dev
 
 ENTRYPOINT python3 bin/run.py
