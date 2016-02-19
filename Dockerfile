@@ -21,7 +21,7 @@ RUN \
   pip install -r requirements.txt && \
   python3 setup.py install && \
   apk del \
-    build-base
+    build-base \
     python3-dev
 
 ENTRYPOINT python3 bin/run.py
