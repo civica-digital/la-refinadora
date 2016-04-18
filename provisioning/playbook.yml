@@ -1,0 +1,58 @@
+---
+- name: Instalación del entorno de pruebas de la validadora.
+  hosts: all
+  sudo: true
+  tasks:
+    - name: Start etcd
+      service: name=etcd.service state=started
+
+    - name: Install docker-py
+      pip: name=docker-py
+
+    - name: pull mongodb
+      docker:
+        docker_api_version: 1.15
+        name: mongo
+        image: mongo
+        state: started
+
+    - name: Get the src repo
+      git:
+        repo: https://github.com/civica-digital/refinadora.git
+        version: develop
+        dest: /validadora
+
+    - name: Build validadora container
+      docker_image:
+        path: /validadora
+        name: "mxabierto/validadora"
+        state: present
+
+    - name: construir validadores
+      docker_image:
+        path: /validadora/resources/ISO-8601
+        name: "validadora/iso8601"
+        state: present
+
+    - name: Locación de los datasets
+      file: path=/datasets state=directory mode=0755
+
+
+    - name: Iniciar la validadora
+      docker:
+        docker_api_version: 1.15
+        name: validadora
+        image: "mxabierto/validadora"
+        state: reloaded
+        links:
+          - mongo:mongo
+        expose:
+          - 80
+        ports:
+          - 0.0.0.0:80:80
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /tmp:/datasets
+        env:
+          REFINADORA_HOST: 0.0.0.0
+          REFINADORA_PORT: 80

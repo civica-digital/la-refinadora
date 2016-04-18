@@ -1,0 +1,18 @@
+---
+validator: iso-8601
+section: u19
+maintainer:
+  - Miguel Salazar
+  - Ricardo Alanis
+
+dependencies:
+  python: requirements.txt
+
+docker:
+  source: Dockerfile
+  entrypoint:
+    - cmd: python ISO-8601.py
+    - arguments:
+      - key: "--datasets"
+        type: path
+  link_services:

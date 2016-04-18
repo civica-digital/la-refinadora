@@ -1,0 +1,10 @@
+---
+- name: Elimina contenedores y repositorio
+  hosts: all
+  sudo: true
+  tasks:
+    - name: remueve la validadora
+      docker: name="validadora" image="mxabierto/validadora" state=absent
+
+    - name: remueve la imagen de la validadora
+      docker_image: name="mxabierto/validadora" state=absent

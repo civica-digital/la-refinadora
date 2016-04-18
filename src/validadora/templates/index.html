@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+	<h1>Validadora de conjuntos de datos abiertos</h1>
+    <form action="/validate" method="post" name="validate">
+      {{ form.hidden_tag() }}
+      URL del catálogo de datos: {{ form.dcat_url(size=80) }}
+      Validadores
+        <ul>
+            {%  for validador in validators %}
+            <input type=checkbox name=validation value="{{ validador.name }}"/>{{ validador.name }}
+            {% endfor %}
+        </ul>
+        <input type="submit" name="dcat_url" value="Validar">
+  	</form>
+{% endblock %}
