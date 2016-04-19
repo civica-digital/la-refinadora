@@ -61,7 +61,7 @@ You can follow the conversation for this project in our Github issues, if you ha
 
 ## Contribute
 
-We want this project to be the result of a community effort, please contirbute with code, debugs or ideas.
+We want this project to be the result of a community effort, please contribute with code, debugs or ideas.
 
 ## Licence
 

@@ -4,17 +4,17 @@ from .recolector import write_to
 
 class Work:
     """
-    Un work es la unidad de procesamiento en la src
+    Work is the processing unit of the SRC
 
-    - [ ] Cada work mantiene un estado, pudiendo ser:
+    - [ ] Every work mantains a status, these can be:
         * ready
         * active
         * stopped
 
-    - [ ] El work se encarga de actualizar su estado.
+    - [ ] Work updates it's own status:
         OBSERVATION:
-             - consultado su estado del contenedor
-             - refleja sus estado en la base de datos.
+             - consulting it's status in the container.
+             - reflects it's status in the DB.
 
     """
     def __init__(self, _id, container, validador, fuente):

@@ -4,9 +4,9 @@ import requests
 
 def fetch_data(source, params={"stream": True}):
     """
-    Permite obtener los recursos que tomara un validador.
+    Allows to obtain resources that a validator will use.
 
-    TODO: [ ] añadir soporte para ssl
+    TODO: [ ] add SSL support
     """
     return requests.get(source, **params)
 
