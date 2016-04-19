@@ -1,0 +1,151 @@
+body{
+  background-color: #F5F5F5 !important;
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.col-md-8{
+	width: 80%;
+}
+.col-md-4{
+	width: 20%;
+	float: right;
+}
+
+.row{
+	width: 100%;
+	display: inline-flex;
+}
+
+.text-center{
+	text-align: center;
+}
+.text-left{
+  text-align: left;
+}
+
+.page-content .wrapper {
+    min-width: 96%;
+    width:  96%;
+    margin-left: 0;
+
+   }
+
+.documentation{
+	background-color: #fff;
+  padding-top: 20px;
+  padding-right: 8px;
+  height: 99vh;
+
+}
+
+.site-header{
+  border-top: 0px solid #424242 !important;
+  border-bottom: 0px solid #e8e8e8 !important;
+}
+
+.site-header .wrapper {
+    min-width: 90%;
+    width:  90%;
+   }
+
+.drop_but {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.margin-bottom-input{
+	margin-bottom: 40px !important;
+}
+.margin-top-input{
+  margin-top: 30px !important;
+}
+
+h3.strong-font{
+font-size: 25px;
+color: #033844;
+font-weight: 900;
+}
+
+h4.strong-font{
+  color: #033844;
+  font-weight: 900;
+}
+
+hr.style-eight {
+  padding: 0;
+  border: none;
+  border-top: 1px solid #818181;
+  color: #818181;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+}
+hr.style-eight:after {
+    content: '\25CB';
+    display: inline-block;
+    position: relative;
+    top: -0.7em;
+    font-size: 1.5em;
+    padding: 0 0.25em;
+    background: #F5F5F5;
+    margin: -3px;
+}
+.img-navbar{
+    max-width: 100%;
+    height: auto;
+}
+
+.img-footer{
+  max-width: 70%;
+  height: auto;
+}
+
+.image-container-navbar{
+  width: 250px;
+  padding: 5px;
+}
+
+.image-container-footer{
+  width: 200px;
+  padding: 5px;
+      margin: auto;
+}
+
+.input-form-url{
+  text-align: center;
+}
+
+.input-url{
+  width: 95%;
+  font-size: 15px;
+  text-align: center;
+  margin: auto;
+  padding: 10px;
+  border-color: #818181;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 2px;
+}
+.btn-submit{
+  margin-top: 20px;
+  background-color: #033844;
+  padding: 10px;
+  color: #fff;
+  border-color: #033844;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 16px;
+  margin-bottom: 40px;
+}
+
+/*
+ * Icons
+ */
+.icon-padding {
+  padding-left: 3px;
+}
+.check-style{
+  color: #818181;
+  font-size: 14px;
+}

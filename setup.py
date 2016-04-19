@@ -12,15 +12,18 @@ setup(
 
     package_dir={
         'validadora': 'src/validadora',
-        'validadora.manager': 'src/validadora/manager'
+        'validadora.manager': 'src/validadora/manager',
+        'validadora.util': 'src/validadora/util'
     },
     package_data={
-        'validadora': ['templates/*.html']
+        'validadora': ['templates/*.html',
+            'static/*/*/*',
+            'static/*/*'],
     },
     entry_points={
         'validadora':[
             'server = validadora:run'
         ]
     },
-    packages=['validadora', 'validadora.manager']
+    packages=['validadora', 'validadora.manager','validadora.util']
 )
