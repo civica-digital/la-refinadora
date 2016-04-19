@@ -1,50 +1,51 @@
 [![Stories in Ready](https://badge.waffle.io/mxabierto/validadora.png?label=ready&title=Ready)](https://waffle.io/mxabierto/validadora)
-# Validadora
+# Refinadora
 
-La validadora es un proyecto que permite el análisis de recursos de datos y la identificaciones de posibles problemas de estructura, formato o estandarización.
-Todo esto a través de un API que permiten crear validaciones asíncronas y consultar su estado ya sea por medio del identificador de la validación o definiendo URL a donde será notificado cuando termine la validaciones.
+Refinadora is a project that allows the analysis of data sets and the identification of possible structure, format or standard problems.
+
+This is done through an API that allows the creation of asynchronous validations to consult their state either through the validator ID or defining the URL where to be notified when the validation is done.
 
 
-## Instalación
+## Install
 
-La validadora tiene dos formas de instalación, una es como un paquete normal de Python y la otra como contenedor.
+Refinadora has 2 ways of installation, the first one is a Python package and the other as a container.
 
-En cualquier opción que desees seguir, necesitaras clonar el repositorio:
+Either option you choose you need to clone the repo:
 
 ```console
 git clone  http://github.com/mxabierto/validadora
 ```
 
-### Paquete de Python
+### Python package
 
-Se recomienda el uso de `virtualenvs` para la instalación y en especial si se desea contribuir al proyecto.
+We recommend the use of `virtualenvs` for the installation and specially if you want to contribute to the project.
 
 ```console
 python setup.py install
 ```
 
-### Adicional
+### Additional
 
- También proveemos `playbooks` y un `Vagrantafile` para crear un ambiente de pruebas.
- Consultalo en la wiki.
+ We also provide `playbooks` and a `Vagrantafile` to create an test enviroment
+Please consult the wiki
 
-### Contenedor
+### Container
 
-Necesitaras instalar Docker, en el caso de Mac o Windows hacer uso de `boot2docker` para poder construir el contenedor.
+You need to install Docker, in Mac or Windows use `boot2docker` to build the container.
 
 ```console
 docker build -t mxabierto/validadora .
 ```
 
-## Uso
+## Use
 
-Si has elegido la opción del paquete de Python puedes levantar una instancia de la aplicación con:
+If you choose the option of the Python package you can run an instance of the aplication with:
 
 ```console
 python bin/run.py
 ```
 
-Pero si tu opción fue Docker, necesitas enlazar tu carpeta temporal a manera que podemos compartir los datasets entre los validadores.
+If you choose Docker, you need to connect your temporary folder so we can share your datasets with the validators.
 
 ```console
 docker run -v /tmp:/datasets -p 5000:5000 mxabierto/validadora
@@ -52,16 +53,16 @@ docker run -v /tmp:/datasets -p 5000:5000 mxabierto/validadora
 
 ## Demo
 
-Puedes visualizar un demo del proyecto aqui.
 
-## ¿Preguntas o problemas?
 
-Mantenemos la conversación del proyecto en nuestra página de problemas issues. Si usted tiene cualquier otra pregunta, nos puede contactar por correo a equipo@civica.digital.
+## ¿FAQs?
 
-## Contribuye
+You can follow the conversation for this project in our Github issues, if you have any other questions you can contact us at equipo@civica.digital.
 
-Queremos que este proyecto sea el resultado de un esfuerzo de la comunidad. Usted puede colaborar con código, ideas y bugs.
+## Contribute
 
-## Licencia
+We want this project to be the result of a community effort, please contirbute with code, debugs or ideas.
+
+## Licence
 
 Available under the license: GNU GPL License, Version 2.0. Read the document [LICENSE](./LICENSE) for more information.
