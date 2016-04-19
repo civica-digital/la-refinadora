@@ -1,4 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/mxabierto/validadora.png?label=ready&title=Ready)](https://waffle.io/mxabierto/validadora)
+<img src="https://raw.githubusercontent.com/mikesaurio/refinadora_static/master/img/logo.png" alt="Refinadora" height="auto" width="200"/>
 # Refinadora ([español](/LEEME.md))
 
 Refinadora is a project that allows the analysis of data sets and the identification of possible structure, format or standard problems.
@@ -13,7 +13,7 @@ Refinadora has 2 ways of installation, the first one is a Python package and the
 Either option you choose you need to clone the repo:
 
 ```console
-git clone  http://github.com/mxabierto/validadora
+git clone  git@github.com:civica-digital/refinadora.git
 ```
 
 ### Python package
@@ -34,7 +34,7 @@ Please consult the wiki
 You need to install Docker, in Mac or Windows use `boot2docker` to build the container.
 
 ```console
-docker build -t mxabierto/validadora .
+docker build -t civicadigital/refinadora
 ```
 
 ## Use
@@ -48,16 +48,17 @@ python bin/run.py
 If you choose Docker, you need to connect your temporary folder so we can share your datasets with the validators.
 
 ```console
-docker run -v /tmp:/datasets -p 5000:5000 mxabierto/validadora
+docker run -v /tmp:/datasets -p 5000:5000 civicadigital/refinadora
 ```
 
 ## Demo
+<img src="https://raw.githubusercontent.com/mikesaurio/refinadora_static/master/img/landing.png" alt="Civica-digital" height="auto" width="100%"/>
 
-
+**We are setting up one for you, which will be available soon.**
 
 ## ¿FAQs?
 
-You can follow the conversation for this project in our Github issues, if you have any other questions you can contact us at equipo@civica.digital.
+You can follow the conversation for this project in our Github [issues](https://github.com/civica-digital/refinadora/issues), if you have any other questions you can contact us at equipo@civica.digital.
 
 ## Contribute
 
