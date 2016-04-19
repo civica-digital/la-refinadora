@@ -1,5 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/mxabierto/validadora.png?label=ready&title=Ready)](https://waffle.io/mxabierto/validadora)
-# Validadora
+# Validadora ([english](/README.md))
 
 La validadora es un proyecto que permite el análisis de recursos de datos y la identificaciones de posibles problemas de estructura, formato o estandarización.
 Todo esto a través de un API que permiten crear validaciones asíncronas y consultar su estado ya sea por medio del identificador de la validación o definiendo URL a donde será notificado cuando termine la validaciones.
