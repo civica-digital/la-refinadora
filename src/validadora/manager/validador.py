@@ -10,13 +10,13 @@ class ValidadorSchemaInvalid(Exception):
 
 class Validador:
     """
-    Los manager deben de incluir su propio id y no pasarlo como parametro.
+    Managers should include their own ID and not pass it as a parameter.
     """
     def __init__(self, schema, repo=None):
         """
-        Los manager son construidos por el Repositorio.
-
-        El parametro schema es la misma sintaxis que una imagen de docker.
+        
+        Managers are built in the repository.
+        Scheme parameter is the same sitax as a Docker image.
         """
 
         self.repo = repo
@@ -24,7 +24,7 @@ class Validador:
             self.schema = schema.copy()
         else:
             output = detect_errors(schema)
-            raise ValidadorSchemaInvalid("La estructura o los valores no son correctos " + str(output))
+            raise ValidadorSchemaInvalid("Value structure are not correct" + str(output))
 
 
     def run(self, _id, fuente):

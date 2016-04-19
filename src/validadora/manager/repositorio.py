@@ -14,11 +14,11 @@ _c = Client(_url_default)
 
 
 class Repositorio:
-    """EL repositorio es el concentrador de manager;
+    """The repository is the manager concentrator;
 
-    - [ ] Puedo verificar si un validador se encuentra en el repositorio.
-    - [ ] Puedo consultar la información requerida por un validador tomando como parametro su nombre.
-    - [ ] Puedo obtener un validador basado en su nombre.
+    - [ ] I can verify if a validator is in the repository. 
+    - [ ] I can consult the required information by a validator using it's name as a parameter.
+    - [ ] I can obtain a validator based on it's name.
 
     """
     def __init__(self, docker_client=_c, name="validadora"):
