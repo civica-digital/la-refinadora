@@ -10,10 +10,10 @@ except:
 from . import views
 
 def run():
+    from .util import assets
     import os
     port = int(os.getenv('REFINADORA_PORT', 5000))
     host = os.getenv('REFINADORA_HOST', '127.0.0.1')
-
     app.run(host, port, debug=True)
 
 if __name__ == "__main__":
