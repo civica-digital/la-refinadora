@@ -1,5 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/mxabierto/validadora.png?label=ready&title=Ready)](https://waffle.io/mxabierto/validadora)
-# Refinadora
+# Refinadora ([español](/LEEME.md))
 
 Refinadora is a project that allows the analysis of data sets and the identification of possible structure, format or standard problems.
 
