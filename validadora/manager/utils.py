@@ -31,7 +31,7 @@ _schema = [
 
 def is_validador_schema(schema):
     """
-    Verifica si el schema del validador tiene los campos que identifican a un validador.
+    Verifies if the validator schema has the identifier fields for a validator. 
     """
     for element in _schema:
         if element not in schema:
@@ -41,7 +41,7 @@ def is_validador_schema(schema):
 
 def make_id():
     """
-    Crea un identificador de 32 caracteres para identificar un work or workgroup.
+    Builds a 32 character ID to identify a work or workgroup.
     """
     random.seed(datetime.now())
     alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
@@ -51,11 +51,11 @@ def make_id():
 
 def update_status(repo, work):
     """
-    Actualiza el esquema del contendor comparando el estado existente en la base de datos con el contenedor.
+    Updates the container scheme comparing the existent state in the database with the container.
 
-    - Si el contenedor y el esquema en la DB tienen un `estatus` activo, actualiza `results` del contenedor.
-    - Si el contenedor ha finalizado, pero en el esquema de la DB, actualiza `status` y `results` de la DB.
-    - SI el contenedor y esquema de la DB tienen estado como finalizado no se realiza ninguna accion.
+    - If the container and the scheme in the DB have an active `status` it updates `results` in the container.
+    - If the container finalized, but not the scheme in the DB, update `status` and results` in the DB.
+    - If the container and scheme of the DB have finalized status apply no action.
     """
     if not work.container:
         return {}
@@ -77,7 +77,7 @@ def update_status(repo, work):
 
 def status(repo, _id):
     """
-    Devuelve el status del contenedor.
+    Return the status of the container.
     """
 
     i = repo.inspect_container(_id)["State"]["Status"]
