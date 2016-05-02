@@ -38,6 +38,7 @@ class Repositorio:
         for validador in self.list_validadores():
             if validador_name in validador.name or validador_name is validador:
                 validador.repo = self
+                validador.client = self.client
                 return validador
 
         return None

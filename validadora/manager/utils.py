@@ -2,6 +2,8 @@
 
 from datetime import datetime
 import random
+import requests
+import json
 
 """
 {
@@ -55,15 +57,20 @@ def update_status(repo, work):
     - If the container finalized, but not the scheme in the DB, update `status` and results` in the DB.
     - If the container and scheme of the DB have finalized status apply no action.
     """
-    Id = work["container"]
-    logs = repo.logs(Id)
+    if not work.container:
+        return {}
 
+    Id = work.container
+    logs = repo.logs(Id).decode('UTF-8')
+    print(logs)
 
-    if status(repo, Id) != work["status"] or work["status"] == "UP":
-        return { "$set": {
-            "status": status(repo, Id),
-            "results": logs
-        }}
+    if status(repo, Id) != work.status or work.status == "Up":
+        work.status = status(repo, Id)
+        if not work.status is "Created":
+            work.results = logs
+        work.save()
+
+        return work
 
     return {}
 
@@ -73,11 +80,14 @@ def status(repo, _id):
     Return the status of the container.
     """
 
-    i = repo.inspect_container(_id)["State"]["Running"]
-    if i:
+    i = repo.inspect_container(_id)["State"]["Status"]
+    if i == "running":
         return "Up"
-    else:
+    if i == "exited":
         return "Down"
+    if i == "created":
+        return "Created"
+    return i
 
 
 def repo_origin(origin, names):
@@ -85,3 +95,26 @@ def repo_origin(origin, names):
         if name.split('/')[0] == origin:
             return  name
     return False
+
+def notify_work(url, res):
+    requests.post(url, json=json.dumps(res))
+
+def notify_dcat(url, id):
+    pass
+
+def get_datasets_from_dcat(dcat):
+    data = requests.get(dcat)
+    if data.status_code < 300:
+        try:
+            jdcat = json.loads(data.text)
+        except:
+            return []
+        if 'dataset' in jdcat.keys():
+            datasets = []
+            for element in jdcat["dataset"]:
+                for entry in element['distribution']:
+                    print(entry.keys())
+                    datasets.append(entry["downloadURL"])
+            return datasets
+
+    return []
