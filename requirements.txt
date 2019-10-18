@@ -8,7 +8,7 @@ PyGithub==1.25.2
 PyYAML==3.11
 Validadora==0.1
 WTForms==2.0.2
-Werkzeug==0.10.4
+Werkzeug==0.15.3
 ansible==1.9.2
 chardet==2.2.1
 colorama==0.2.5
