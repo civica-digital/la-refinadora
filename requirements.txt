@@ -2,7 +2,7 @@ Flask==0.10.1
 Flask-Assets==0.10
 Flask-LiveScript==0.1
 Flask-WTF==0.12
-Jinja2==2.8
+Jinja2==2.11.3
 MarkupSafe==0.23
 PyGithub==1.25.2
 PyYAML==3.11
