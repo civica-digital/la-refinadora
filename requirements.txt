@@ -5,7 +5,7 @@ Flask-WTF==0.12
 Jinja2==2.8
 MarkupSafe==0.23
 PyGithub==1.25.2
-PyYAML==3.11
+PyYAML==5.4
 Validadora==0.1
 WTForms==2.0.2
 Werkzeug==0.10.4
