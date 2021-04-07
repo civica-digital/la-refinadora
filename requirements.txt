@@ -9,7 +9,7 @@ PyYAML==3.11
 Validadora==0.1
 WTForms==2.0.2
 Werkzeug==0.10.4
-ansible==1.9.2
+ansible==2.10.0
 chardet==2.2.1
 colorama==0.2.5
 command-not-found==0.3
