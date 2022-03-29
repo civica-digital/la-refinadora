@@ -20,7 +20,7 @@ html5lib==0.999
 invoke==0.11.1
 itsdangerous==0.24
 language-selector==0.1
-paramiko==1.15.2
+paramiko==2.10.1
 pycrypto==2.6.1
 pycurl==7.19.3
 pygobject==3.12.0
